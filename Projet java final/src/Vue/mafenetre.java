@@ -31,12 +31,13 @@ public class mafenetre extends JFrame
     /** Constructeur de ma fenetre*/
     public mafenetre()
     {
-       /** Appel du constructeur de JFame et mise en page de la fenetre principale*/
+       /** Appel du constructeur de JFrame et mise en page de la fenetre principale*/
        super();
        this.setTitle(" Connexion : Entrée dans la base de donnée de l'hopital ");
        this.setSize(400,200);
        this.setLocationRelativeTo(null);
        this.setResizable(false);
+       this.setDefaultCloseOperation(EXIT_ON_CLOSE);
        
        /** Instancier tous les boutons et les textes*/
        login = new JLabel("Login");
@@ -66,6 +67,7 @@ public class mafenetre extends JFrame
        cont.add(quitter);
        quitter.setBounds(260, 120, 85, 20);
        
+       
        /** Si on appuie sur le bouton quitter la fenetre se ferme*/ 
        quitter.addActionListener(new ActionListener() 
        {
@@ -77,7 +79,7 @@ public class mafenetre extends JFrame
        });
        
         /** Si on appuie sur le bouton local on test si on a le bon login et mot de passe*/
-        Local.addActionListener(new ActionListener() 
+       Local.addActionListener(new ActionListener() 
        {
          @Override
          public void actionPerformed(ActionEvent e) 
@@ -101,17 +103,21 @@ public class mafenetre extends JFrame
           String login =login1.getText();
           String password = mdp1.getText();
           
+          
           /** On appel de la fonction de connexion pour se connecter a la BDD*/
           ma_co.ConnexionBD();
           connexion = ma_co.getConnect();
+          
           
           /** On teste si le login et le mot de passe rentrer pour se connecter en local est correcte*/
           try
           {
               if((login.equals("root")) && (password.equals("")))
               {
-                JOptionPane.showMessageDialog(null,"Connexion réussie ! ","Success",JOptionPane.PLAIN_MESSAGE);
+                //JOptionPane.showMessageDialog(null,"Connexion réussie ! ","Success",JOptionPane.PLAIN_MESSAGE);
                 // Il faudra refaire une class fenetre2 avec notre interface proposant les 3 modules possibles*/
+                  dispose(); // Ferme l'ancienne Jframe pour laisser place à la nouvelle
+                  Vue.FenetreModules fenetremodules = new Vue.FenetreModules();
               }  
               else 
               {
@@ -129,6 +135,7 @@ public class mafenetre extends JFrame
         
       /** On rend visible le tout*/
      this.setVisible(true);
+     
     }
 }
  

@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package projet_bdd;
+import Vue.ModuleRechercher;
 import vue.mafenetre;
 
 /**
@@ -21,7 +22,7 @@ public class Projet_BDD
    /** Main qui lance le programme*/
    public static void main(String[] args) 
    {
-     mafenetre mf = new mafenetre();
+       ModuleRechercher mf = new ModuleRechercher();
    }
  }
     
