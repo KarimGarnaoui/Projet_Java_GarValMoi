@@ -6,8 +6,7 @@
 package vue;
 
 /** Importer tout ce qui est necessaire pour le projet*/
-import projet_bdd.Connexion;
-import projet_bdd.Projet_BDD;
+import Modele.Connexion;
 import java.awt.event.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,6 +15,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
@@ -84,20 +85,25 @@ public class mafenetre extends JFrame
          @Override
          public void actionPerformed(ActionEvent e) 
          {
-            mafenetre(login1 ,mdp1);
+             try {
+                 mafenetre(login1 ,mdp1);
+             } catch (SQLException ex) {
+                 Logger.getLogger(mafenetre.class.getName()).log(Level.SEVERE, null, ex);
+             } catch (ClassNotFoundException ex) {
+                 Logger.getLogger(mafenetre.class.getName()).log(Level.SEVERE, null, ex);
+             }
          }
          
          /**Fonction qui permet de verifier si le login et le mot de passe sont correct puis se connecte a la BDD*/
-         private void mafenetre(JTextField login1, JPasswordField mdp1) 
+         private void mafenetre(JTextField login1, JPasswordField mdp1) throws SQLException, ClassNotFoundException 
          {
           
           /** On instancie une nouvelle connexion a la BDD en appel la classe connexion*/
-          Connexion ma_co = new Connexion();
-          Connection connexion;
+          
+         
           
           /** Variable a créer si l'on veut effectuer des requetes SQL*/
-          Statement statement = null;
-          ResultSet resultat;
+          
           
           /** On recupere le login et le mot de passe saisie*/
           String login =login1.getText();
@@ -105,31 +111,28 @@ public class mafenetre extends JFrame
           
           
           /** On appel de la fonction de connexion pour se connecter a la BDD*/
-          ma_co.ConnexionBD();
-          connexion = ma_co.getConnect();
+          
+          
           
           
           /** On teste si le login et le mot de passe rentrer pour se connecter en local est correcte*/
-          try
-          {
+          
               if((login.equals("root")) && (password.equals("")))
               {
                 //JOptionPane.showMessageDialog(null,"Connexion réussie ! ","Success",JOptionPane.PLAIN_MESSAGE);
                 // Il faudra refaire une class fenetre2 avec notre interface proposant les 3 modules possibles*/
+                  Connexion ma_co = new Connexion("hopital",login,password);
+                  
                   dispose(); // Ferme l'ancienne Jframe pour laisser place à la nouvelle
-                  Vue.FenetreModules fenetremodules = new Vue.FenetreModules();
+                  Vue.FenetreModules fenetremodules = new Vue.FenetreModules(ma_co);
               }  
               else 
               {
                 JOptionPane.showMessageDialog(null,"Login ou mot de passe incorrect! ","Error",1);
               }
          
-            connexion.close();
-          }
-          catch (SQLException e4) 
-          {    
-             System.out.println(e4.getMessage());
-          }
+          
+          
          }
         });
         

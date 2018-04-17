@@ -5,8 +5,15 @@
  */
 package Vue;
 
+
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.*;
+import Modele.Connexion;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -15,10 +22,12 @@ import javax.swing.*;
 public class FenetreModules extends JFrame {
      
     private JButton BoutonMAJ, BoutonRecherche, BoutonReporting ; 
+    private Connexion connexion ; 
     
-    public FenetreModules(){
+    public FenetreModules(Connexion connexion1){
         
         super();
+        connexion = connexion1 ; 
         this.setTitle("Menu");
         this.setSize(240,220);
         this.setLocationRelativeTo(null);
@@ -38,11 +47,27 @@ public class FenetreModules extends JFrame {
         BoutonRecherche.setBounds(20,70,180,40);
         BoutonReporting.setBounds(20,120,180,40);
         
+        BoutonRecherche.addActionListener(new BoutonRechercher());
+        
+        
+        
         this.setVisible(true);
-        
-        
+               
     }
     
-    
+    class BoutonRechercher implements ActionListener{
+           
+            @Override
+            public void actionPerformed(ActionEvent e){
+                
+                try {
+                    ModuleRechercher recherche = new ModuleRechercher(connexion) ;
+                } catch (SQLException ex) {
+                    Logger.getLogger(FenetreModules.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+            }
+      
+    }
     
 }

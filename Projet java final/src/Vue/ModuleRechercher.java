@@ -5,6 +5,7 @@
  */
 package Vue;
 
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -12,6 +13,16 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.* ;
+import Modele.Connexion;
+import com.sun.corba.se.spi.orbutil.fsm.Guard;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.xml.transform.Result;
+import sun.awt.image.PixelConverter;
 
 /**
  *
@@ -20,16 +31,28 @@ import javax.swing.* ;
 public class ModuleRechercher extends JFrame {
    
     private final JLabel tableLabel, champsLabel, valeurLabel ; 
-    private final JComboBox table, champs ; 
+    private  JComboBox table, champs ; 
     private final JTextField valeur ; 
     private final JRadioButton conditionEgalite, conditionSuperieur, conditionInferieur, conditionDifferent ;
-    private final JTable tableResultats ; 
+    private  JTable tableResultats ; 
+    private final JButton valider ; 
+    private final Connexion connexion ;
+    private JPanel Result, Content, Condition ;
+    private String conditionSelectionnee ; 
+    private String[] titreColonnes ; 
+    private String[][] donnees ; 
+    private JScrollPane tableResultatsDeroulant ; 
+    private String[] tab ; 
     
     /**
      * Constructeur de la classe ModuleRechercher
+     * @param connexion1
+     * @throws java.sql.SQLException
      */
-    public ModuleRechercher(){
+    public ModuleRechercher(Connexion connexion1) throws SQLException{
         super();
+        connexion = connexion1 ;
+        conditionSelectionnee = "=" ; 
         this.setTitle("Rechercher");
         this.setSize(800,600);
         this.setLocationRelativeTo(null);
@@ -37,37 +60,42 @@ public class ModuleRechercher extends JFrame {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());
         
-        JPanel Content = new JPanel() ;
+        Content = new JPanel() ;
         Content.setBorder(BorderFactory.createTitledBorder("Critères de recherche"));
         Content.setLayout(null);
         Content.setPreferredSize(new Dimension(590,200));
         
         // Liste déroulante Table
-        String tab[] = {"--Selectionner--" , "Chambre" , "Docteur" , "Employe" , "Hospitalisation" , "Infirmier" , "Malade" , "Service" , "Soigne" } ;
-        table = new JComboBox(tab);
-        table.setBounds(350,50,200,25);
+        String tab1[] = {"--Selectionner--" , "chambre" , "docteur" , "employe" , "hospitalisation" , "infirmier" , "malade" , "service" , "soigne" } ;
+        table = new JComboBox(tab1);
+        table.setBounds(350,20,200,25);
         table.addActionListener(new ActionRechercher());
         tableLabel = new JLabel("Table : ") ;
-        tableLabel.setBounds(280,50,50,25);
+        tableLabel.setBounds(280,20,50,25);
         Content.add(tableLabel) ; 
         Content.add(table) ;
         
         // Liste déroulante champ dépendant de listeTable
         String tab2[] = { "" } ;
         champs = new JComboBox(tab2);
-        champs.setBounds(350,85,200,25);
+        champs.setBounds(350,55,200,25);
         champsLabel = new JLabel("Champ : ") ; 
-        champsLabel.setBounds(280,85,50,25);
+        champsLabel.setBounds(280,55,50,25);
         Content.add(champsLabel) ; 
         Content.add(champs) ;
         
         // Valeur recherchée
         valeur = new JTextField() ; 
-        valeur.setBounds(350,120,200,25);
+        valeur.setBounds(350,90,200,25);
         valeurLabel = new JLabel("Valeur : ") ;
-        valeurLabel.setBounds(280,120,50,25);
+        valeurLabel.setBounds(280,90,50,25);
         Content.add(valeurLabel) ; 
         Content.add(valeur) ;
+        
+        valider = new JButton("Valier");
+        valider.setBounds(480,135,75,25);
+        valider.addActionListener(new ActionValider());
+        Content.add(valider) ; 
         
         // Nom de la BDD
         JLabel nomBDD = new JLabel("Base de donnée");        
@@ -78,56 +106,43 @@ public class ModuleRechercher extends JFrame {
         Content.add(BDD) ; 
         
         // Condition sur valeur
-        JPanel Condition = new JPanel() ;
+        Condition = new JPanel() ;
         Condition.setPreferredSize(new Dimension(190,200));
         Condition.setLayout(new GridLayout(4,1));
         Condition.setBorder(BorderFactory.createTitledBorder("Conditions"));
         
         conditionEgalite = new JRadioButton("Egales") ;
-        conditionSuperieur = new JRadioButton("Supérieures") ;
         conditionInferieur = new JRadioButton("Inférieures") ;
+        conditionSuperieur = new JRadioButton("Supérieures") ;
         conditionDifferent = new JRadioButton("Différentes") ;
+        conditionEgalite.addActionListener(new ActionCondition()); 
+        conditionInferieur.addActionListener(new ActionCondition()); 
+        conditionSuperieur.addActionListener(new ActionCondition()); 
+        conditionDifferent.addActionListener(new ActionCondition()); 
         
+        ButtonGroup Bg = new ButtonGroup() ; 
+        Bg.add(conditionEgalite) ;
+        Bg.add(conditionInferieur) ;
+        Bg.add(conditionSuperieur) ;
+        Bg.add(conditionDifferent) ;
         Condition.add(conditionEgalite) ;
         Condition.add(conditionSuperieur) ;
         Condition.add(conditionInferieur) ;
         Condition.add(conditionDifferent) ;
         
         // Tableau de résultats
-        JPanel Result = new JPanel() ;
+        Result = new JPanel() ;
         Result.setLayout(null);
         Result.setBorder(BorderFactory.createTitledBorder("Résultats"));
         Result.setPreferredSize(new Dimension(780,390));
         
-        String[][] donnees = {  
-            {" ", " ", " "," ", " "}, 
-            {" ", " ", " "," ", " "}, 
-            {" ", " ", " "," ", " "},
-            {" ", " ", " "," ", " "},
-            {" ", " ", " "," ", " "},
-            {" ", " ", " "," ", " "},
-            {" ", " ", " "," ", " "},
-            {" ", " ", " "," ", " "},
-            {" ", " ", " "," ", " "},
-            {" ", " ", " "," ", " "},
-            {" ", " ", " "," ", " "},
-            {" ", " ", " "," ", " "},
-            {" ", " ", " "," ", " "},
-            {" ", " ", " "," ", " "},
-            {" ", " ", " "," ", " "},
-            {" ", " ", " "," ", " "},
-            {" ", " ", " "," ", " "},
-            {" ", " ", " "," ", " "},
-            {" ", " ", " "," ", " "},
-            {" ", " ", " "," ", " "},
-            {" ", " ", " "," ", " "},
-            {" ", " ", " "," ", " "} 
-        } ;
+        String[][] donnees = connexion.remplirChampsRequete("Select *From employe;") ;
         
-        String[] titreColonnes = {"Champ 1","Champ 2", "Champ 3", "Champ 4", "Champ 4"};
+        titreColonnes = new String[]{"","","","",""};
+        System.out.println(connexion.remplirChampsRequete("Select *From employe;").toString()); 
         
         tableResultats = new JTable(donnees,titreColonnes);
-        JScrollPane tableResultatsDeroulant = new JScrollPane(tableResultats) ;
+        tableResultatsDeroulant = new JScrollPane(tableResultats) ;
         tableResultatsDeroulant.setBounds(20,20,750,350);
         Result.add(tableResultatsDeroulant) ; 
         
@@ -148,44 +163,94 @@ public class ModuleRechercher extends JFrame {
      */
     public void setJComboBox(String nomTable)
     {
-        String[] tab = {""} ;
-        if(nomTable.equals("Chambre")){
-            tab = new String[]{"--Selectionner--" , "Code service","Numero chambre","Surveillant","Nombre de lits"} ;
+        
+        if(nomTable.equals("chambre")){
+            tab = new String[]{"code_service","no_chambre","surveillant","nb_lits"} ;
         }
-        if(nomTable.equals("Docteur")){
-            tab = new String[]{"--Selectionner--" , "Numero","Specialite"} ;
+        if(nomTable.equals("docteur")){
+            tab = new String[]{"numero","specialite"} ;
         }
-        if(nomTable.equals("Employe")){
-            tab = new String[]{"--Selectionner--" , "Numero","Nom","Prenom","Adresse","Telephone"} ;
+        if(nomTable.equals("employe")){
+            tab = new String[]{"numero","nom","prenom","adresse","tel"} ;
         }
-        if(nomTable.equals("Hospitalisation")){
-            tab = new String[]{"--Selectionner--" , "Numero malade","Code service","Numero chambre","Lit"} ;
+        if(nomTable.equals("hospitalisation")){
+            tab = new String[]{"no_malade","code_service","no_chambre","lit"} ;
         }
-        if(nomTable.equals("Infirmier")){
-            tab = new String[]{"--Selectionner--" , "Numero","Code service","Rotation","Salaire"} ;
+        if(nomTable.equals("infirmier")){
+            tab = new String[]{"numero","code_service","rotation","salaire"} ;
         }
-        if(nomTable.equals("Malade")){
-            tab = new String[]{"--Selectionner--" , "Numero","Nom","Prenom","Adresse","Telephone","Mutuelle"};
+        if(nomTable.equals("malade")){
+            tab = new String[]{"numero","nom","prenom","adresse","tel","mutuelle"};
         }
-        if(nomTable.equals("Service")){
-            tab = new String[]{"--Selectionner--" , "Code","Nom","Batiment","Directeur"} ;
+        if(nomTable.equals("service")){
+            tab = new String[]{"code","nom","batiment","directeur"} ;
         }
-        if(nomTable.equals("Soigne")){
-            tab = new String[]{"--Selectionner--" , "Numero docteur","Numero malade"} ;
+        if(nomTable.equals("soigne")){
+            tab = new String[]{"no_docteur","no_malade"} ;
         }
         DefaultComboBoxModel model = new DefaultComboBoxModel(tab);
         champs.setModel(model);
     }
+    
+    public void modifResultats(){
+        
+        DefaultTableModel tm = new DefaultTableModel(donnees, tab);
+        tableResultats.setModel(tm) ;
+        System.out.println(donnees.length) ;
+        System.out.println("Je suis passe par la");
+        
+    }
      
     class ActionRechercher implements ActionListener {
     
-    @Override
-    public void actionPerformed(ActionEvent e)
-    {
-        setJComboBox(table.getSelectedItem().toString());
-        
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            setJComboBox(table.getSelectedItem().toString());
+
+        }
     }
-}
+    
+    class ActionCondition implements ActionListener {
+    
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            
+            if(e.getSource() == conditionEgalite) conditionSelectionnee = "=" ; 
+            if(e.getSource() == conditionInferieur) conditionSelectionnee = "<" ;
+            if(e.getSource() == conditionSuperieur) conditionSelectionnee = ">" ; 
+            if(e.getSource() == conditionDifferent) conditionSelectionnee = "!=" ; 
+        }
+    }
+    
+    class ActionValider implements ActionListener {
+        
+        
+        
+        
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            String table1 = table.getSelectedItem().toString();
+            String champ1 = champs.getSelectedItem().toString();
+            String valeur1 = valeur.getText();
+            try { 
+                System.out.println("Select * FROM "+table1+" WHERE "+champ1 +conditionSelectionnee+valeur1);
+                donnees = connexion.remplirChampsRequete("Select * FROM "+table1+" WHERE "+champ1 +conditionSelectionnee+valeur1 ) ;
+                for(int i=0; i<donnees.length;i++){
+                    for(int j=0;j<donnees[i].length;j++){
+                    System.out.println(donnees[i][j]);
+                    }
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ModuleRechercher.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            modifResultats();
+           
+
+        }
+    }
     
 }
 

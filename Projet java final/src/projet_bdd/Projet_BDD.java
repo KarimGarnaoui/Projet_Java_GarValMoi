@@ -19,10 +19,11 @@ public class Projet_BDD
    
    }
 
-   /** Main qui lance le programme*/
+   /** Main qui lance le programm
+     * @param args*/
    public static void main(String[] args) 
    {
-       ModuleRechercher mf = new ModuleRechercher();
+       mafenetre mf = new mafenetre();
    }
  }
     
