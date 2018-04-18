@@ -23,24 +23,6 @@ public class Projet_BDD
      * @param args*/
    public static void main(String[] args) 
    {
-       int j = 0;
-       String chaine = "44,jean,valjean" ; 
-       String[] tab = new String[10] ;
-       for(int i = 0;i<tab.length;i++){
-            tab[i] = ""; 
-       }
-       for(int i = 0;i<chaine.length();i++){
-            //System.out.println("Caractère n°"+i+" : "+chaine.charAt(i));
-            if(chaine.charAt(i) == ','){
-                j++ ;
-                i++;
-            } 
-            tab[j] += chaine.charAt(i) ;
-       }
-       for(int i = 0;i<tab.length;i++){
-            System.out.println(tab[i]); 
-       }
-      
        mafenetre mf = new mafenetre();
    }
  }

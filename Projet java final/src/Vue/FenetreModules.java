@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  */
 public class FenetreModules extends JFrame {
      
-    private JButton BoutonMAJ, BoutonRecherche, BoutonReporting ; 
+    private JButton BoutonMAJ, BoutonRecherche, BoutonReporting, Quitter ; 
     private Connexion connexion ; 
     
     public FenetreModules(Connexion connexion1){
@@ -29,7 +29,7 @@ public class FenetreModules extends JFrame {
         super();
         connexion = connexion1 ; 
         this.setTitle("Menu");
-        this.setSize(240,220);
+        this.setSize(400,300);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -38,16 +38,22 @@ public class FenetreModules extends JFrame {
         BoutonMAJ = new JButton("Mise à jour des données") ;
         BoutonRecherche = new JButton("Rechercher") ;
         BoutonReporting = new JButton("Reporting");
+        Quitter = new JButton("Quitter");
+        
+        BoutonMAJ.setBounds(100,40,180,40);
+        BoutonRecherche.setBounds(100,90,180,40);
+        BoutonReporting.setBounds(100,140,180,40);
+        Quitter.setBounds(300,225,75,25);
+        
+        BoutonRecherche.addActionListener(new BoutonRechercher());
+        Quitter.addActionListener(new BoutonQuitter());
         
         this.add(BoutonMAJ) ; 
         this.add(BoutonRecherche) ; 
         this.add(BoutonReporting) ;
+        this.add(Quitter) ;
         
-        BoutonMAJ.setBounds(20,20,180,40);
-        BoutonRecherche.setBounds(20,70,180,40);
-        BoutonReporting.setBounds(20,120,180,40);
         
-        BoutonRecherche.addActionListener(new BoutonRechercher());
         
         
         
@@ -66,6 +72,15 @@ public class FenetreModules extends JFrame {
                     Logger.getLogger(FenetreModules.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
+            }
+      
+    }
+    
+    class BoutonQuitter implements ActionListener{
+           
+            @Override
+            public void actionPerformed(ActionEvent e){
+                System.exit(0);
             }
       
     }

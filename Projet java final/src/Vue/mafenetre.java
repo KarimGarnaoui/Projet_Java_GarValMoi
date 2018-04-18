@@ -68,6 +68,9 @@ public class mafenetre extends JFrame
        cont.add(quitter);
        quitter.setBounds(260, 120, 85, 20);
        
+       Local.setMnemonic(KeyEvent.VK_ENTER); 
+       getRootPane().setDefaultButton(Local);
+       
        
        /** Si on appuie sur le bouton quitter la fenetre se ferme*/ 
        quitter.addActionListener(new ActionListener() 

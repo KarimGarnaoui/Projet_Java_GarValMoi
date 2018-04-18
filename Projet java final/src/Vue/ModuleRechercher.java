@@ -35,7 +35,7 @@ public class ModuleRechercher extends JFrame {
     private final JTextField valeur ; 
     private final JRadioButton conditionEgalite, conditionSuperieur, conditionInferieur, conditionDifferent ;
     private  JTable tableResultats ; 
-    private final JButton valider ; 
+    private final JButton valider, retour ; 
     private final Connexion connexion ;
     private JPanel Result, Content, Condition ;
     private String conditionSelectionnee ; 
@@ -93,9 +93,14 @@ public class ModuleRechercher extends JFrame {
         Content.add(valeur) ;
         
         valider = new JButton("Valier");
-        valider.setBounds(480,135,75,25);
+        valider.setBounds(500,135,75,25);
         valider.addActionListener(new ActionValider());
         Content.add(valider) ; 
+        
+        retour = new JButton("Retour");
+        retour.setBounds(400,135,75,25);
+        retour.addActionListener(new ActionRetour());
+        Content.add(retour) ; 
         
         // Nom de la BDD
         JLabel nomBDD = new JLabel("Base de donnée");        
@@ -139,7 +144,7 @@ public class ModuleRechercher extends JFrame {
         String[][] donnees = {{""}} ;
         
         titreColonnes = new String[]{""};
-        System.out.println(connexion.remplirChampsRequete("Select *From employe;").toString()); 
+        
         
         tableResultats = new JTable(donnees,titreColonnes);
         tableResultatsDeroulant = new JScrollPane(tableResultats) ;
@@ -195,10 +200,7 @@ public class ModuleRechercher extends JFrame {
     public void modifResultats(){
         
         DefaultTableModel tm = new DefaultTableModel(donnees, tab);
-        tableResultats.setModel(tm) ;
-        System.out.println(donnees.length) ;
-        System.out.println("Je suis passe par la");
-        
+        tableResultats.setModel(tm) ;  
     }
      
     class ActionRechercher implements ActionListener {
@@ -207,6 +209,15 @@ public class ModuleRechercher extends JFrame {
         public void actionPerformed(ActionEvent e)
         {
             setJComboBox(table.getSelectedItem().toString());
+
+        }
+    }
+    class ActionRetour implements ActionListener {
+    
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            dispose();
 
         }
     }
@@ -235,18 +246,17 @@ public class ModuleRechercher extends JFrame {
             String table1 = table.getSelectedItem().toString();
             String champ1 = champs.getSelectedItem().toString();
             String valeur1 = valeur.getText();
-            try { 
-                System.out.println("Select * FROM "+table1+" WHERE "+champ1 +conditionSelectionnee+valeur1);
-                donnees = connexion.remplirChampsRequete("Select * FROM "+table1+" WHERE "+champ1 +conditionSelectionnee+"'"+valeur1+"'" ) ;
-                for(int i=0; i<donnees.length;i++){
-                    for(int j=0;j<donnees[i].length;j++){
-                    System.out.println(donnees[i][j]);
-                    }
+            if(table1!="--Selectionner--"){
+                try { 
+                    System.out.println("Requête SQL : Select * FROM "+table1+" WHERE "+champ1 +conditionSelectionnee+"'"+valeur1+"'");
+                    donnees = connexion.remplirChampsRequete("Select * FROM "+table1+" WHERE "+champ1 +conditionSelectionnee+"'"+valeur1+"'" ) ;
+
+                } catch (SQLException ex) {
+                    Logger.getLogger(ModuleRechercher.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } catch (SQLException ex) {
-                Logger.getLogger(ModuleRechercher.class.getName()).log(Level.SEVERE, null, ex);
+                modifResultats();
             }
-            modifResultats();
+            
            
 
         }
