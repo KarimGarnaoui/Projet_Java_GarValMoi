@@ -136,9 +136,9 @@ public class ModuleRechercher extends JFrame {
         Result.setBorder(BorderFactory.createTitledBorder("Résultats"));
         Result.setPreferredSize(new Dimension(780,390));
         
-        String[][] donnees = connexion.remplirChampsRequete("Select *From employe;") ;
+        String[][] donnees = {{""}} ;
         
-        titreColonnes = new String[]{"","","","",""};
+        titreColonnes = new String[]{""};
         System.out.println(connexion.remplirChampsRequete("Select *From employe;").toString()); 
         
         tableResultats = new JTable(donnees,titreColonnes);
@@ -237,7 +237,7 @@ public class ModuleRechercher extends JFrame {
             String valeur1 = valeur.getText();
             try { 
                 System.out.println("Select * FROM "+table1+" WHERE "+champ1 +conditionSelectionnee+valeur1);
-                donnees = connexion.remplirChampsRequete("Select * FROM "+table1+" WHERE "+champ1 +conditionSelectionnee+valeur1 ) ;
+                donnees = connexion.remplirChampsRequete("Select * FROM "+table1+" WHERE "+champ1 +conditionSelectionnee+"'"+valeur1+"'" ) ;
                 for(int i=0; i<donnees.length;i++){
                     for(int j=0;j<donnees[i].length;j++){
                     System.out.println(donnees[i][j]);
