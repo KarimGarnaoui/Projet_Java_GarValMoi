@@ -46,6 +46,7 @@ public class FenetreModules extends JFrame {
         Quitter.setBounds(300,225,75,25);
         
         BoutonRecherche.addActionListener(new BoutonRechercher());
+        BoutonMAJ.addActionListener(new BoutonMAJ());
         Quitter.addActionListener(new BoutonQuitter());
         
         this.add(BoutonMAJ) ; 
@@ -75,6 +76,22 @@ public class FenetreModules extends JFrame {
             }
       
     }
+    
+       class BoutonMAJ implements ActionListener{
+           
+            @Override
+            public void actionPerformed(ActionEvent e){
+                
+                try {
+                    ModuleMAJ maj = new ModuleMAJ(connexion) ;
+                } catch (SQLException ex) {
+                    Logger.getLogger(FenetreModules.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+            }
+      
+    }
+    
     
     class BoutonQuitter implements ActionListener{
            
