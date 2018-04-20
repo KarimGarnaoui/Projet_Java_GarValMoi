@@ -27,38 +27,53 @@ import javax.swing.table.DefaultTableModel;
 
 public class ModuleMAJ extends JFrame
 {
-    private final JLabel tableLabel, champsLabel, valeurLabel ; 
-    private  JComboBox table, champs ; 
-    private final JTextField valeur ;
-    
-    private  JTable tableResultats ; 
-    
-    private final JButton Supprimer,Ajouter,Modifier,retour ; 
+    private final JLabel tableLabel,champsLabel,valeurLabel ; 
+    private  JComboBox table,champs; 
+    private final JTextField valeur;
+    private final JButton Supprimer; 
     private final Connexion connexion ;
-    private JPanel Result, Content;
-    private String ChoixMAJ; 
+    private JPanel Ajouterlab,Content,Condition,Modifierlab;
+    private String conditionSelectionnee ;
+    private final JRadioButton conditionEgalite, conditionSuperieur, conditionInferieur, conditionDifferent ;
+    
     private String[] titreColonnes ; 
-    private String[][] donnees ; 
-    private JScrollPane tableResultatsDeroulant ; 
+    //private String[][] donnees ; 
+    //private JScrollPane tableResultatsDeroulant ; 
     private String[] tab ;
     
     public ModuleMAJ(Connexion connexion1) throws SQLException
     {
+        // Permet de créer la fenêtre principale
         super();
         connexion = connexion1;
-        ChoixMAJ = "=";
+        conditionSelectionnee = "=" ;
         this.setTitle("Mise à jour des données");
-        this.setSize(600,400);
+        this.setSize(800,600);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());
         
+        // Créer la partie de suppression
         Content = new JPanel() ;
+        Content.setBorder(BorderFactory.createTitledBorder("SUPPRIMER"));
         Content.setLayout(null);
-        Content.setPreferredSize(new Dimension(600,200));
+        Content.setPreferredSize(new Dimension(200,200));
         
-        // Liste déroulante Table
+        // Créer la partie d'ajout
+        Ajouterlab = new JPanel() ;
+        Ajouterlab.setLayout(null);
+        Ajouterlab.setPreferredSize(new Dimension(790,180));
+        Ajouterlab.setBorder(BorderFactory.createTitledBorder("AJOUTER"));
+        
+        // Créer la partie de modification
+        Modifierlab = new JPanel() ;
+        Modifierlab.setLayout(null);
+        Modifierlab.setPreferredSize(new Dimension(590,180));
+        Modifierlab.setBorder(BorderFactory.createTitledBorder("MODIFIER"));
+        
+        
+        // Liste déroulante Table pour supprimer
         String tab1[] = {"--Selectionner--" , "chambre" , "docteur" , "employe" , "hospitalisation" , "infirmier" , "malade" , "service" , "soigne" } ;
         table = new JComboBox(tab1);
         table.setBounds(100,20,200,25);
@@ -67,8 +82,9 @@ public class ModuleMAJ extends JFrame
         tableLabel.setBounds(10,20,50,25);
         Content.add(tableLabel) ; 
         Content.add(table) ;
-        
-        // Liste déroulante champ dépendant de listeTable
+       
+        // Liste déroulante champ dépendant de listeTable pour supprimer
+        // Creer la selection de la table
         String tab2[] = { "" } ;
         champs = new JComboBox(tab2);
         champs.setBounds(100,55,200,25);
@@ -77,51 +93,49 @@ public class ModuleMAJ extends JFrame
         Content.add(champsLabel) ; 
         Content.add(champs) ;
         
-        // Valeur recherchée
-        valeur = new JTextField() ; 
+        // Valeur recherchée et créer la selection des champs
+        valeur = new JTextField();
         valeur.setBounds(100,90,200,25);
         valeurLabel = new JLabel("Valeur : ") ;
         valeurLabel.setBounds(10,90,50,25);
         Content.add(valeurLabel) ; 
-        Content.add(valeur) ;
+        Content.add(valeur);
         
+        // Permet de creer le bouton supprimer
         Supprimer = new JButton("Supprimer");
-        Supprimer.setBounds(350,100,75,25);
+        Supprimer.setBounds(150,130,100,30);
         Supprimer.addActionListener(new ActionSupprimer());
         Content.add(Supprimer);
         
-        Ajouter = new JButton("Ajouter");
-        Ajouter.setBounds(350,150,75,25);
-        Content.add(Ajouter);
+       
+        //Permet d'afficher et de gerer les conditions pour la suppression
+        Condition = new JPanel() ;
+        Condition.setPreferredSize(new Dimension(200,200));
+        Condition.setLayout(new GridLayout(4,1));
+        Condition.setBorder(BorderFactory.createTitledBorder("Conditions"));
+        conditionEgalite = new JRadioButton("Egales") ;
+        conditionInferieur = new JRadioButton("Inférieures") ;
+        conditionSuperieur = new JRadioButton("Supérieures") ;
+        conditionDifferent = new JRadioButton("Différentes") ;
+        ButtonGroup Bg = new ButtonGroup() ; 
+        Bg.add(conditionEgalite) ;
+        Bg.add(conditionInferieur) ;
+        Bg.add(conditionSuperieur) ;
+        Bg.add(conditionDifferent) ;
+        Condition.add(conditionEgalite) ;
+        Condition.add(conditionSuperieur) ;
+        Condition.add(conditionInferieur) ;
+        Condition.add(conditionDifferent) ;     
+        conditionEgalite.addActionListener(new ModuleMAJ.ActionCondition()); 
+        conditionInferieur.addActionListener(new ModuleMAJ.ActionCondition()); 
+        conditionSuperieur.addActionListener(new ModuleMAJ.ActionCondition()); 
+        conditionDifferent.addActionListener(new ModuleMAJ.ActionCondition()); 
         
-        Modifier = new JButton("Modifier");
-        Modifier.setBounds(350,200,75,25);
-        Content.add(Modifier);
-        
-        retour = new JButton("Retour");
-        retour.setBounds(350,250,75,25);
-        // retour.addActionListener(new ActionRetour());
-        Content.add(retour) ; 
-        
-        // Nom de la BDD
-        JLabel nomBDD = new JLabel("Base de donnée");        
-        JLabel BDD = new JLabel("Hopital");
-        
-       // Tableau de résultats
-        Result = new JPanel() ;
-        String[][] donnees = {{""}} ;
-        
-        titreColonnes = new String[]{""};
-        
-        tableResultats = new JTable(donnees,titreColonnes);
-        tableResultatsDeroulant = new JScrollPane(tableResultats) ;
-        tableResultatsDeroulant.setBounds(20,20,750,350);
-        Result.add(tableResultatsDeroulant) ; 
-        
-        
-        Result.setPreferredSize(new Dimension(800,400));
-        
-        this.getContentPane().add(Content,BorderLayout.WEST) ;    
+        // Permet d'afficher toute la fenetre de MAJ       
+        this.getContentPane().add(Content,BorderLayout.CENTER) ;
+        this.getContentPane().add(Condition,BorderLayout.EAST);
+        this.getContentPane().add(Ajouterlab,BorderLayout.NORTH) ;
+        this.getContentPane().add(Modifierlab,BorderLayout.SOUTH);
         this.setVisible(true);     
     }
 
@@ -157,14 +171,7 @@ public class ModuleMAJ extends JFrame
         champs.setModel(model);
     }
     
-    
-    public void modifResultats()
-    {
-        
-        DefaultTableModel tm = new DefaultTableModel(donnees, tab);
-        tableResultats.setModel(tm) ;  
-    }
-     
+         
     class ActionRechercher implements ActionListener 
     {
     
@@ -172,20 +179,26 @@ public class ModuleMAJ extends JFrame
         public void actionPerformed(ActionEvent e)
         {
             setJComboBox(table.getSelectedItem().toString());
-
         }
     }
     
-    class ActionRetour implements ActionListener 
-    {
+    
+    // Permet de gerer les conditions 
+    class ActionCondition implements ActionListener 
+     {
     
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            dispose();
+            
+            if(e.getSource() == conditionEgalite) conditionSelectionnee = "=" ; 
+            if(e.getSource() == conditionInferieur) conditionSelectionnee = "<" ;
+            if(e.getSource() == conditionSuperieur) conditionSelectionnee = ">" ; 
+            if(e.getSource() == conditionDifferent) conditionSelectionnee = "!=" ; 
         }
     }
      
+    // Permet de gerer la suppresion
     class ActionSupprimer implements ActionListener 
     {
              
@@ -195,18 +208,42 @@ public class ModuleMAJ extends JFrame
             String table1 = table.getSelectedItem().toString();
             String champ1 = champs.getSelectedItem().toString();
             String valeur1 = valeur.getText();
-          
+            if(table1!="--Selectionner--"){
                 try 
                 { 
                     System.out.println("Requête SQL : DELETE * FROM "+table1+" WHERE "+champ1+"'"+valeur1+"'");
-                    connexion.executeUpdate("DELETE FROM "+table1+" WHERE "+champ1+"="+"'"+valeur1+"'");
+                    connexion.executeUpdate("DELETE FROM "+table1+" WHERE "+champ1+conditionSelectionnee+"'"+valeur1+"'");
                 } 
                 catch (SQLException ex) 
                 {
                     Logger.getLogger(ModuleRechercher.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                modifResultats();
-            
+            }
         }
     }
+    
+    // Permet d'ajouter dans la BDD
+    class ActionAjouter implements ActionListener 
+    {
+             
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            String table1 = table.getSelectedItem().toString();
+            String champ1 = champs.getSelectedItem().toString();
+            String valeur1 = valeur.getText();
+            //String valeur2 = valeur0.getText()
+            if(table1!="--Selectionner--"){
+                try 
+                { 
+                    System.out.println("Requête SQL : DELETE * FROM "+table1+" WHERE "+champ1+"'"+valeur1+"'");
+                    connexion.executeUpdate("INSERT INTO"+table1+"VALUES("+"'"+valeur+"'"+"'"+valeur+"'");
+                } 
+                catch (SQLException ex) 
+                {
+                    Logger.getLogger(ModuleRechercher.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }    
 }
