@@ -23,119 +23,129 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.tree.DefaultTreeCellEditor;
 
 
 public class ModuleMAJ extends JFrame
 {
-    private final JLabel tableLabel,champsLabel,valeurLabel ; 
-    private  JComboBox table,champs; 
-    private final JTextField valeur;
-    private final JButton Supprimer; 
-    private final Connexion connexion ;
-    private JPanel Ajouterlab,Content,Condition,Modifierlab;
-    private String conditionSelectionnee ;
-    private final JRadioButton conditionEgalite, conditionSuperieur, conditionInferieur, conditionDifferent ;
+    private final JLabel tableLabel, champsLabel, valeurLabel, table2Label, clefSuppLabel, clefModifLabel ; 
+    private  JComboBox table, champs, table2 ; 
+    private final JTextField valeur, clef, clefModif ;
     
+    private  JTable tableResultats ; 
+    private final JButton Supprimer,Ajouter,Modifier,retour ; 
+    private final Connexion connexion ;
+    private JPanel modifPan, suppPan, ajoutPan ; 
+    private String ChoixMAJ; 
     private String[] titreColonnes ; 
-    //private String[][] donnees ; 
-    //private JScrollPane tableResultatsDeroulant ; 
-    private String[] tab ;
+    private String[][] donnees ; 
+    private JScrollPane tableResultatsDeroulant ; 
+    private String[] tabChamps, tabTables ;
     
     public ModuleMAJ(Connexion connexion1) throws SQLException
     {
-        // Permet de créer la fenêtre principale
         super();
         connexion = connexion1;
-        conditionSelectionnee = "=" ;
+        ChoixMAJ = "=";
         this.setTitle("Mise à jour des données");
-        this.setSize(800,600);
+        this.setSize(500,400);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());
         
-        // Créer la partie de suppression
-        Content = new JPanel() ;
-        Content.setBorder(BorderFactory.createTitledBorder("SUPPRIMER"));
-        Content.setLayout(null);
-        Content.setPreferredSize(new Dimension(200,200));
-        
-        // Créer la partie d'ajout
-        Ajouterlab = new JPanel() ;
-        Ajouterlab.setLayout(null);
-        Ajouterlab.setPreferredSize(new Dimension(790,180));
-        Ajouterlab.setBorder(BorderFactory.createTitledBorder("AJOUTER"));
-        
-        // Créer la partie de modification
-        Modifierlab = new JPanel() ;
-        Modifierlab.setLayout(null);
-        Modifierlab.setPreferredSize(new Dimension(590,180));
-        Modifierlab.setBorder(BorderFactory.createTitledBorder("MODIFIER"));
+        /////////////Modification /////////////////
+        modifPan = new JPanel() ;
+        modifPan.setBorder(BorderFactory.createTitledBorder("Modifier"));
+        modifPan.setLayout(null);
+        modifPan.setPreferredSize(new Dimension(490,190));
         
         
-        // Liste déroulante Table pour supprimer
-        String tab1[] = {"--Selectionner--" , "chambre" , "docteur" , "employe" , "hospitalisation" , "infirmier" , "malade" , "service" , "soigne" } ;
-        table = new JComboBox(tab1);
-        table.setBounds(100,20,200,25);
-        table.addActionListener(new ActionRechercher());
+        tabTables = new String[]{"--Selectionner--" , "chambre" , "docteur" , "employe" , "hospitalisation" , "infirmier" , "malade" , "service" , "soigne" } ;
+        table = new JComboBox(tabTables);
+        table.setBounds(120,30,150,25);
+        table.addActionListener(new ModifListe());
         tableLabel = new JLabel("Table : ") ;
-        tableLabel.setBounds(10,20,50,25);
-        Content.add(tableLabel) ; 
-        Content.add(table) ;
-       
-        // Liste déroulante champ dépendant de listeTable pour supprimer
-        // Creer la selection de la table
-        String tab2[] = { "" } ;
-        champs = new JComboBox(tab2);
-        champs.setBounds(100,55,200,25);
-        champsLabel = new JLabel("Champ : ") ; 
-        champsLabel.setBounds(10,55,50,25);
-        Content.add(champsLabel) ; 
-        Content.add(champs) ;
+        tableLabel.setBounds(20,30,100,25);
+        modifPan.add(tableLabel) ; 
+        modifPan.add(table) ; 
         
-        // Valeur recherchée et créer la selection des champs
-        valeur = new JTextField();
-        valeur.setBounds(100,90,200,25);
-        valeurLabel = new JLabel("Valeur : ") ;
-        valeurLabel.setBounds(10,90,50,25);
-        Content.add(valeurLabel) ; 
-        Content.add(valeur);
         
-        // Permet de creer le bouton supprimer
+        tabChamps = new String[]{ "" } ;
+        champs = new JComboBox(tabChamps);
+        champs.setBounds(120,65,150,25);
+        champsLabel = new JLabel("Champs : ") ; 
+        champsLabel.setBounds(20,65,100,25);
+        modifPan.add(champsLabel) ; 
+        modifPan.add(champs) ;
+        
+        clefModif = new JTextField() ; 
+        clefModif.setBounds(120,100,150,25);
+        clefModifLabel = new JLabel("Clef : ") ;
+        clefModifLabel.setBounds(20,100,100,25);
+        modifPan.add(clefModifLabel) ; 
+        modifPan.add(clefModif) ;
+        
+        valeur = new JTextField() ; 
+        valeur.setBounds(120,135,150,25);
+        valeurLabel = new JLabel("Nouvelle valeur : ") ;
+        valeurLabel.setBounds(20,135,100,25);
+        modifPan.add(valeurLabel) ; 
+        modifPan.add(valeur) ;
+        
+        Modifier = new JButton("Modifier");
+        Modifier.setBounds(370,100,100,25);
+        Modifier.addActionListener(new ActionModifier());
+        modifPan.add(Modifier);
+        
+        //////////// Suppression //////////////
+        
+        suppPan = new JPanel() ;
+        suppPan.setBorder(BorderFactory.createTitledBorder("Supprimer"));
+        suppPan.setLayout(null);
+        suppPan.setPreferredSize(new Dimension(340,190));
+        
+        table2 = new JComboBox(tabTables);
+        table2.setBounds(70,30,200,25);
+        table2Label = new JLabel("Table : ") ;
+        table2Label.setBounds(20,30,50,25);
+        suppPan.add(table2Label) ; 
+        suppPan.add(table2) ; 
+        
+        clef = new JTextField();
+        clef.setBounds(70,65,200,25);
+        clefSuppLabel = new JLabel("Clef : ");
+        clefSuppLabel.setBounds(20,65,50,25);
+        suppPan.add(clefSuppLabel);
+        suppPan.add(clef);
+        
         Supprimer = new JButton("Supprimer");
-        Supprimer.setBounds(150,130,100,30);
+        Supprimer.setBounds(220,140,100,25);
         Supprimer.addActionListener(new ActionSupprimer());
-        Content.add(Supprimer);
+        suppPan.add(Supprimer);
         
-       
-        //Permet d'afficher et de gerer les conditions pour la suppression
-        Condition = new JPanel() ;
-        Condition.setPreferredSize(new Dimension(200,200));
-        Condition.setLayout(new GridLayout(4,1));
-        Condition.setBorder(BorderFactory.createTitledBorder("Conditions"));
-        conditionEgalite = new JRadioButton("Egales") ;
-        conditionInferieur = new JRadioButton("Inférieures") ;
-        conditionSuperieur = new JRadioButton("Supérieures") ;
-        conditionDifferent = new JRadioButton("Différentes") ;
-        ButtonGroup Bg = new ButtonGroup() ; 
-        Bg.add(conditionEgalite) ;
-        Bg.add(conditionInferieur) ;
-        Bg.add(conditionSuperieur) ;
-        Bg.add(conditionDifferent) ;
-        Condition.add(conditionEgalite) ;
-        Condition.add(conditionSuperieur) ;
-        Condition.add(conditionInferieur) ;
-        Condition.add(conditionDifferent) ;     
-        conditionEgalite.addActionListener(new ModuleMAJ.ActionCondition()); 
-        conditionInferieur.addActionListener(new ModuleMAJ.ActionCondition()); 
-        conditionSuperieur.addActionListener(new ModuleMAJ.ActionCondition()); 
-        conditionDifferent.addActionListener(new ModuleMAJ.ActionCondition()); 
         
-        // Permet d'afficher toute la fenetre de MAJ       
-        this.getContentPane().add(Content,BorderLayout.CENTER) ;
-        this.getContentPane().add(Condition,BorderLayout.EAST);
-        this.getContentPane().add(Ajouterlab,BorderLayout.NORTH) ;
-        this.getContentPane().add(Modifierlab,BorderLayout.SOUTH);
+        //////////// Ajout ////////////////
+        ajoutPan = new JPanel() ; 
+        ajoutPan.setBorder(BorderFactory.createTitledBorder("Ajouter"));
+        ajoutPan.setLayout(null);
+        ajoutPan.setPreferredSize(new Dimension(140,190));
+        
+        Ajouter = new JButton("Ajouter");
+        Ajouter.setBounds(20,50,100,25);
+        Ajouter.addActionListener(new ActionAjouter());
+        ajoutPan.add(Ajouter);
+        
+        retour = new JButton("Retour");
+        retour.setBounds(20,140,100,25);
+        retour.addActionListener(new ActionRetour());
+        ajoutPan.add(retour) ; 
+        
+        
+        
+        this.getContentPane().add(modifPan,BorderLayout.NORTH) ;    
+        this.getContentPane().add(suppPan,BorderLayout.WEST) ;    
+        this.getContentPane().add(ajoutPan,BorderLayout.EAST) ;    
         this.setVisible(true);     
     }
 
@@ -144,86 +154,94 @@ public class ModuleMAJ extends JFrame
     {
         
         if(nomTable.equals("chambre")){
-            tab = new String[]{"code_service","no_chambre","surveillant","nb_lits"} ;
+            tabChamps = new String[]{"code_service","no_chambre","surveillant","nb_lits"} ;
+            clefModifLabel.setText("code_service");
         }
         if(nomTable.equals("docteur")){
-            tab = new String[]{"numero","specialite"} ;
+            tabChamps = new String[]{"numero","specialite"} ;
+            clefModifLabel.setText("numero");
         }
         if(nomTable.equals("employe")){
-            tab = new String[]{"numero","nom","prenom","adresse","tel"} ;
+            tabChamps = new String[]{"numero","nom","prenom","adresse","tel"} ;
+            clefModifLabel.setText("numero");
         }
         if(nomTable.equals("hospitalisation")){
-            tab = new String[]{"no_malade","code_service","no_chambre","lit"} ;
+            tabChamps = new String[]{"no_malade","code_service","no_chambre","lit"} ;
+            clefModifLabel.setText("no_malade");
         }
         if(nomTable.equals("infirmier")){
-            tab = new String[]{"numero","code_service","rotation","salaire"} ;
+            tabChamps = new String[]{"numero","code_service","rotation","salaire"} ;
+            clefModifLabel.setText("numero");
         }
         if(nomTable.equals("malade")){
-            tab = new String[]{"numero","nom","prenom","adresse","tel","mutuelle"};
+            tabChamps = new String[]{"numero","nom","prenom","adresse","tel","mutuelle"};
+            clefModifLabel.setText("numero");
         }
         if(nomTable.equals("service")){
-            tab = new String[]{"code","nom","batiment","directeur"} ;
+            tabChamps = new String[]{"code","nom","batiment","directeur"} ;
+            clefModifLabel.setText("code");
         }
         if(nomTable.equals("soigne")){
-            tab = new String[]{"no_docteur","no_malade"} ;
+            tabChamps = new String[]{"no_docteur","no_malade"} ;
+            clefModifLabel.setText("no_docteur");
         }
-        DefaultComboBoxModel model = new DefaultComboBoxModel(tab);
+        DefaultComboBoxModel model = new DefaultComboBoxModel(tabChamps);
+       
         champs.setModel(model);
     }
     
-         
-    class ActionRechercher implements ActionListener 
+    
+    public void modifResultats()
+    {
+        
+        DefaultTableModel tm = new DefaultTableModel(donnees, tabChamps);
+        tableResultats.setModel(tm) ;  
+    }
+     
+    class ModifListe implements ActionListener 
     {
     
         @Override
         public void actionPerformed(ActionEvent e)
         {
             setJComboBox(table.getSelectedItem().toString());
+
         }
     }
     
-    
-    // Permet de gerer les conditions 
-    class ActionCondition implements ActionListener 
-     {
+    class ActionRetour implements ActionListener 
+    {
     
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            
-            if(e.getSource() == conditionEgalite) conditionSelectionnee = "=" ; 
-            if(e.getSource() == conditionInferieur) conditionSelectionnee = "<" ;
-            if(e.getSource() == conditionSuperieur) conditionSelectionnee = ">" ; 
-            if(e.getSource() == conditionDifferent) conditionSelectionnee = "!=" ; 
+            dispose();
         }
     }
      
-    // Permet de gerer la suppresion
     class ActionSupprimer implements ActionListener 
     {
              
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            String table1 = table.getSelectedItem().toString();
-            String champ1 = champs.getSelectedItem().toString();
-            String valeur1 = valeur.getText();
-            if(table1!="--Selectionner--"){
+            String table1 = table2.getSelectedItem().toString();
+            String clef1 = clef.getText() ; 
+          
                 try 
                 { 
-                    System.out.println("Requête SQL : DELETE * FROM "+table1+" WHERE "+champ1+"'"+valeur1+"'");
-                    connexion.executeUpdate("DELETE FROM "+table1+" WHERE "+champ1+conditionSelectionnee+"'"+valeur1+"'");
+                    System.out.println("DELETE FROM "+table1+" WHERE numero ="+"'"+clef1+"'");
+                    connexion.executeUpdate("DELETE FROM "+table1+" WHERE numero ="+"'"+clef1+"'");
                 } 
                 catch (SQLException ex) 
                 {
                     Logger.getLogger(ModuleRechercher.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }
+            
         }
     }
     
-    // Permet d'ajouter dans la BDD
-    class ActionAjouter implements ActionListener 
+    class ActionModifier implements ActionListener 
     {
              
         @Override
@@ -231,19 +249,31 @@ public class ModuleMAJ extends JFrame
         {
             String table1 = table.getSelectedItem().toString();
             String champ1 = champs.getSelectedItem().toString();
-            String valeur1 = valeur.getText();
-            //String valeur2 = valeur0.getText()
-            if(table1!="--Selectionner--"){
+            String clefSelect = clefModif.getText();
+            String clef1 = clefModifLabel.getText();
+            String new_val = valeur.getText();
+          
                 try 
                 { 
-                    System.out.println("Requête SQL : DELETE * FROM "+table1+" WHERE "+champ1+"'"+valeur1+"'");
-                    connexion.executeUpdate("INSERT INTO"+table1+"VALUES("+"'"+valeur+"'"+"'"+valeur+"'");
+                    System.out.println("Requête SQL : UPDATE  "+table1+" SET "+champ1+" = '"+new_val+"' WHERE "+clef1+" = '"+clefSelect+"'");
+                    connexion.executeUpdate("UPDATE  "+table1+" SET "+champ1+" = '"+new_val+"' WHERE "+clef1+" = '"+clefSelect+"'");
                 } 
                 catch (SQLException ex) 
                 {
                     Logger.getLogger(ModuleRechercher.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }
+                
+            
         }
-    }    
+    }
+    
+    class ActionAjouter implements ActionListener 
+    {
+             
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            AjoutElem ajoutelem = new AjoutElem(connexion) ; 
+        }
+    }
 }
