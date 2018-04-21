@@ -1,10 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Vue;
 
+/**Librairie importé*/
 import Modele.Connexion;
 import com.sun.org.apache.xalan.internal.xsltc.compiler.util.StringStack;
 import java.awt.BorderLayout;
@@ -23,10 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-/**
- *
- * @author karim
- */
+/** Classe permettant d'ajouter un élément*/
 public class AjoutElem extends JFrame {
     
     private Connexion connexion ; 
@@ -62,6 +55,7 @@ public class AjoutElem extends JFrame {
         
             connexion = connexion1 ; 
             
+            // Déclare la fenêtre d'ajout
             this.setTitle("Ajouter");
             this.setSize(520,400);
             this.setLocation(954,30);
@@ -169,7 +163,8 @@ public class AjoutElem extends JFrame {
             this.setVisible(true);  
     }
             
-            class ModifListeAjout implements ActionListener 
+           /** Permet de modifier les champs à saisir en focntion de la table selectionné*/ 
+           class ModifListeAjout implements ActionListener 
             {
 
                 @Override
@@ -199,6 +194,7 @@ public class AjoutElem extends JFrame {
                 }
             }
             
+           
             class ModifListeFonction implements ActionListener 
             {
 
@@ -224,7 +220,7 @@ public class AjoutElem extends JFrame {
                 }
             }
             
-            
+            /** Si on appuie sur le bouton ajouter on ajoute un élément à la BDD*/
             class BoutonAjouter implements ActionListener 
             {
                 
@@ -271,7 +267,5 @@ public class AjoutElem extends JFrame {
                            Logger.getLogger(AjoutElem.class.getName()).log(Level.SEVERE, null, ex);  
                    }
                 }
-            }
-           
-    
+            }   
 }

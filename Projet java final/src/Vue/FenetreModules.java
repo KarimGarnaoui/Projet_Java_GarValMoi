@@ -1,11 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Vue;
 
-
+/** Librairie importé*/
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,10 +10,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author karim
- */
+/** Classe permettant d'afficher le menu principale*/
 public class FenetreModules extends JFrame {
      
     private JButton BoutonMAJ, BoutonRecherche, BoutonReporting, Quitter ; 
@@ -26,15 +18,17 @@ public class FenetreModules extends JFrame {
     
     public FenetreModules(Connexion connexion1){
         
+        // Déclaration de la fenêtre
         super();
         connexion = connexion1 ; 
-        this.setTitle("Menu");
+        this.setTitle("Menu principal");
         this.setSize(400,400);
         this.setLocation(50,30);
         this.setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLayout(null);
         
+        // déclaration des boutons
         BoutonMAJ = new JButton("Mise à jour des données") ;
         BoutonRecherche = new JButton("Rechercher") ;
         BoutonReporting = new JButton("Reporting");
@@ -49,19 +43,19 @@ public class FenetreModules extends JFrame {
         BoutonMAJ.addActionListener(new BoutonMAJ());
         Quitter.addActionListener(new BoutonQuitter());
         BoutonReporting.addActionListener(new BoutonReporting());
+        
+        // On ajoute les éléments sur la fenêtre
         this.add(BoutonMAJ) ; 
         this.add(BoutonRecherche) ; 
         this.add(BoutonReporting) ;
         this.add(Quitter) ;
-        
-        
-        
-        
-        
+       
+        // On rend la fenêtre visible
         this.setVisible(true);
                
     }
     
+    /** Si on appuie sur le bouton rechercher on lance le module rechercher*/
     class BoutonRechercher implements ActionListener{
            
             @Override
@@ -76,7 +70,7 @@ public class FenetreModules extends JFrame {
             }
       
     }
-    
+       /** Si on appuie sur le bouton mise à jour on lance le module mise à jour*/
        class BoutonMAJ implements ActionListener{
            
             @Override
@@ -92,7 +86,7 @@ public class FenetreModules extends JFrame {
       
     }
     
-    
+    /** Si on appuie sur le bouton quitter on quitte le programme*/
     class BoutonQuitter implements ActionListener{
            
             @Override
@@ -102,6 +96,7 @@ public class FenetreModules extends JFrame {
       
     }
     
+    /** Si on appuie sur le bouton reporting on lance le module reporting*/
     class BoutonReporting implements ActionListener{
            
             @Override

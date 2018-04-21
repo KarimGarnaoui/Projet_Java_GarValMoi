@@ -1,11 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package vue;
 
-/** Importer tout ce qui est necessaire pour le projet*/
+/** Librairie importer*/
 import Modele.Connexion;
 import java.awt.event.*;
 import java.awt.*;
@@ -20,7 +16,7 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
-/** Cette classe est l'interface d'affichage de la Connexion */
+/**Interface du module de Connexion */
 public class mafenetre extends JFrame 
 {   
     /**Declaration de mes boutons et texte*/
@@ -34,8 +30,8 @@ public class mafenetre extends JFrame
     {
        /** Appel du constructeur de JFrame et mise en page de la fenetre principale*/
        super();
-       this.setTitle(" Connexion : Entrée dans la base de donnée de l'hopital ");
-       this.setSize(400,200);
+       this.setTitle("Connexion : Gestion informatique d'un centre hospitalier");
+       this.setSize(450,200);
        this.setLocationRelativeTo(null);
        this.setResizable(false);
        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -50,7 +46,6 @@ public class mafenetre extends JFrame
        quitter = new JButton(" Quitter");
        
        /**Ajout des boutons sur la fenetre et declaration de leur dimension*/
-       /** IL faudra Peut etre redisigner*/
        Container cont = this.getContentPane();
        cont.setLayout(null);
        cont.add(login);
@@ -100,48 +95,30 @@ public class mafenetre extends JFrame
          /**Fonction qui permet de verifier si le login et le mot de passe sont correct puis se connecte a la BDD*/
          private void mafenetre(JTextField login1, JPasswordField mdp1) throws SQLException, ClassNotFoundException 
          {
-          
-          /** On instancie une nouvelle connexion a la BDD en appel la classe connexion*/
-          
-         
-          
-          /** Variable a créer si l'on veut effectuer des requetes SQL*/
-          
-          
           /** On recupere le login et le mot de passe saisie*/
           String login =login1.getText();
           String password = mdp1.getText();
-          
-          
-          /** On appel de la fonction de connexion pour se connecter a la BDD*/
-          
-          
-          
-          
-          /** On teste si le login et le mot de passe rentrer pour se connecter en local est correcte*/
-          
+         
+              /** On teste si le login et le mot de passe rentrer pour se connecter en local est correcte*/
               if((login.equals("root")) && (password.equals("")))
               {
-                //JOptionPane.showMessageDialog(null,"Connexion réussie ! ","Success",JOptionPane.PLAIN_MESSAGE);
-                // Il faudra refaire une class fenetre2 avec notre interface proposant les 3 modules possibles*/
+                  /** On se connecte à la BDD*/
                   Connexion ma_co = new Connexion("hopital",login,password);
                   
                   dispose(); // Ferme l'ancienne Jframe pour laisser place à la nouvelle
+                  
+                  /** On ouvre la fenêtre du menu*/
                   Vue.FenetreModules fenetremodules = new Vue.FenetreModules(ma_co);
               }  
               else 
               {
                 JOptionPane.showMessageDialog(null,"Login ou mot de passe incorrect! ","Error",1);
-              }
-         
-          
-          
+              }   
          }
         });
         
       /** On rend visible le tout*/
-     this.setVisible(true);
-     
+     this.setVisible(true);    
     }
 }
  

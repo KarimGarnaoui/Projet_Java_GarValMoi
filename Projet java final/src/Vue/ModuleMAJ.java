@@ -1,5 +1,6 @@
 package Vue;
 
+/** Librairie importé*/
 import Modele.Connexion;
 import com.sun.org.apache.xalan.internal.xsltc.compiler.util.StringStack;
 import java.awt.BorderLayout;
@@ -27,12 +28,13 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultTreeCellEditor;
 
 
+/** Classe permettant de gérer le module de mise à jour*/
 public class ModuleMAJ extends JFrame
 {
+    // On déclare tous les éléments dont on a besoin
     private final JLabel tableLabel, champsLabel, valeurLabel, table2Label, clefSuppLabel, clefModifLabel ; 
     private  JComboBox table, champs, table2 ; 
     private final JTextField valeur, clef, clefModif ;
-    
     private  JTable tableResultats ; 
     private final JButton Supprimer,Ajouter,Modifier ; 
     private final Connexion connexion ;
@@ -43,8 +45,10 @@ public class ModuleMAJ extends JFrame
     private JScrollPane tableResultatsDeroulant ; 
     private String[] tabChamps, tabTables ;
     
+    /** Constructeur de la classe du module mise à jour*/
     public ModuleMAJ(Connexion connexion1) throws SQLException
     {
+        // déclaration de la fenêtre
         super();
         connexion = connexion1;
         ChoixMAJ = "=";
@@ -60,7 +64,7 @@ public class ModuleMAJ extends JFrame
         modifPan.setLayout(null);
         modifPan.setPreferredSize(new Dimension(490,190));
         
-        
+        // On sélectionne les tables que l'on veut modifier
         tabTables = new String[]{"--Selectionner--" , "employe" , "docteur" , "infirmier" , "malade" } ;
         table = new JComboBox(tabTables);
         table.setBounds(120,30,150,25);
@@ -70,7 +74,7 @@ public class ModuleMAJ extends JFrame
         modifPan.add(tableLabel) ; 
         modifPan.add(table) ; 
         
-        
+        // On choisit le champs 
         tabChamps = new String[]{ "" } ;
         champs = new JComboBox(tabChamps);
         champs.setBounds(120,65,150,25);
@@ -79,6 +83,7 @@ public class ModuleMAJ extends JFrame
         modifPan.add(champsLabel) ; 
         modifPan.add(champs) ;
         
+        // La clef se modifie
         clefModif = new JTextField() ; 
         clefModif.setBounds(120,100,150,25);
         clefModifLabel = new JLabel("Numero : ") ;
@@ -86,6 +91,7 @@ public class ModuleMAJ extends JFrame
         modifPan.add(clefModifLabel) ; 
         modifPan.add(clefModif) ;
         
+        // On declare la zone de texte de modification
         valeur = new JTextField() ; 
         valeur.setBounds(120,135,150,25);
         valeurLabel = new JLabel("Nouvelle valeur : ") ;
@@ -93,13 +99,13 @@ public class ModuleMAJ extends JFrame
         modifPan.add(valeurLabel) ; 
         modifPan.add(valeur) ;
         
+        // déclaration du bouton modifier
         Modifier = new JButton("Modifier");
         Modifier.setBounds(375,135,100,25);
         Modifier.addActionListener(new ActionModifier());
         modifPan.add(Modifier);
         
         //////////// Suppression //////////////
-        
         suppPan = new JPanel() ;
         suppPan.setBorder(BorderFactory.createTitledBorder("Supprimer"));
         suppPan.setLayout(null);
@@ -136,14 +142,17 @@ public class ModuleMAJ extends JFrame
         Ajouter.addActionListener(new ActionAjouter());
         ajoutPan.add(Ajouter);
         
-        
+        // On ajoute tous les éléments sur la fenêtre
         this.getContentPane().add(modifPan,BorderLayout.NORTH) ;    
         this.getContentPane().add(suppPan,BorderLayout.WEST) ;    
         this.getContentPane().add(ajoutPan,BorderLayout.EAST) ;    
         this.setVisible(true);     
     }
 
-    
+    /**
+     * Permet d'actualiser la JComboBox Champs en fonction de la table choisie par l'utilisateur
+     * @param nomTable nom de la table sélectionnée
+     */
     public void setJComboBox(String nomTable)
     {
         
@@ -183,6 +192,7 @@ public class ModuleMAJ extends JFrame
         }
     }
     
+    /** Permet de supprimer un élément lorsqu'on appuie sur le bouton*/
     class ActionSupprimer implements ActionListener 
     {
              
@@ -229,6 +239,7 @@ public class ModuleMAJ extends JFrame
         }
     }
     
+    /** Permet de modifier un élément lorsqu'on appuie sur le bouton modifier*/
     class ActionModifier implements ActionListener 
     {
              
@@ -258,6 +269,7 @@ public class ModuleMAJ extends JFrame
         }
     }
     
+    /** Permet d'ouvrir la fenêtre pour ajouter un élément lorsqu'on appuie sur ajouter*/
     class ActionAjouter implements ActionListener 
     {
              

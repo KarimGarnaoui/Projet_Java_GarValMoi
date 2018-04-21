@@ -1,17 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package projet_bdd;
+
 import Vue.ModuleRechercher;
 import javafx.stage.Screen;
 import vue.mafenetre;
 
-/**
- *
- * @author Nicolas
- */
+/** Classe principale ou se trouve le main*/
 public class Projet_BDD 
 {
    /** Constructeur par default*/

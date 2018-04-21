@@ -1,11 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Vue;
 
-
+/** Librairie importé*/
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -24,10 +19,7 @@ import javax.swing.table.TableModel;
 import javax.xml.transform.Result;
 import sun.awt.image.PixelConverter;
 
-/**
- *
- * @author karim
- */
+/** Classe permettant de gerer le module de recherche*/
 public class ModuleRechercher extends JFrame {
    
     private final JLabel tableLabel, champsLabel, valeurLabel ; 
@@ -50,6 +42,8 @@ public class ModuleRechercher extends JFrame {
      * @throws java.sql.SQLException
      */
     public ModuleRechercher(Connexion connexion1) throws SQLException{
+        
+        // Création de la fenêtre
         super();
         connexion = connexion1 ;
         conditionSelectionnee = "=" ; 
@@ -59,6 +53,7 @@ public class ModuleRechercher extends JFrame {
         this.setResizable(false);
         this.setLayout(new BorderLayout());
         
+        // Création d'une partie de la fenêtre
         Content = new JPanel() ;
         Content.setBorder(BorderFactory.createTitledBorder("Critères de recherche"));
         Content.setLayout(null);
@@ -91,6 +86,7 @@ public class ModuleRechercher extends JFrame {
         Content.add(valeurLabel) ; 
         Content.add(valeur) ;
         
+        // Création du bouton valider
         valider = new JButton("Valier");
         valider.setBounds(500,135,75,25);
         valider.addActionListener(new ActionValider());
@@ -110,6 +106,7 @@ public class ModuleRechercher extends JFrame {
         Condition.setLayout(new GridLayout(4,1));
         Condition.setBorder(BorderFactory.createTitledBorder("Conditions"));
         
+        // Création des boutons de condition
         conditionEgalite = new JRadioButton("Egales") ;
         conditionInferieur = new JRadioButton("Inférieures") ;
         conditionSuperieur = new JRadioButton("Supérieures") ;
@@ -136,22 +133,21 @@ public class ModuleRechercher extends JFrame {
         Result.setPreferredSize(new Dimension(780,390));
         
         String[][] donnees = {{""}} ;
-        
         titreColonnes = new String[]{""};
         
-        
+        // Création du tableau de résultat
         tableResultats = new JTable(donnees,titreColonnes);
         tableResultatsDeroulant = new JScrollPane(tableResultats) ;
         tableResultatsDeroulant.setBounds(20,20,750,350);
         Result.add(tableResultatsDeroulant) ; 
-        
-        
         Result.setPreferredSize(new Dimension(800,400));
         
+        // On rajoute tous les éléments sur la fenêtre
         this.getContentPane().add(Content,BorderLayout.WEST) ;
         this.getContentPane().add(Condition,BorderLayout.EAST) ;
         this.getContentPane().add(Result,BorderLayout.SOUTH) ;
         
+        // On rend la fenêtre visible
         this.setVisible(true);
         
     }
@@ -207,6 +203,7 @@ public class ModuleRechercher extends JFrame {
         }
     }
     
+    /** Permet de récuperer la condition selectionnée*/
     class ActionCondition implements ActionListener {
     
         @Override
@@ -220,18 +217,17 @@ public class ModuleRechercher extends JFrame {
         }
     }
     
-    class ActionValider implements ActionListener {
-        
-        
-        
-        
+    /** Lorsqu'on auppuie sur le bouton valider on accede à la recherche demandée*/
+    class ActionValider implements ActionListener 
+    {    
         @Override
         public void actionPerformed(ActionEvent e)
         {
             String table1 = table.getSelectedItem().toString();
             String champ1 = champs.getSelectedItem().toString();
             String valeur1 = valeur.getText();
-            if(table1!="--Selectionner--"){
+            if(table1!="--Selectionner--")
+            {
                 try { 
                     System.out.println("Requête SQL : Select * FROM "+table1+" WHERE "+champ1 +conditionSelectionnee+"'"+valeur1+"'");
                     donnees = connexion.remplirChampsRequete("Select * FROM "+table1+" WHERE "+champ1 +conditionSelectionnee+"'"+valeur1+"'" ) ;
@@ -241,11 +237,7 @@ public class ModuleRechercher extends JFrame {
                 }
                 modifResultats();
             }
-            
-           
-
         }
-    }
-    
+    }   
 }
 

@@ -1,15 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Vue;
 
-/**
- *
- * @author pierr
- */
 
+/**Librairie importe*/
 import Modele.Connexion;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -31,6 +23,7 @@ import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 
 
+/** Classe Gérant le module reporting*/
 public class ModuleReporting extends JFrame {
     
     private Connexion connexion ; 
@@ -40,8 +33,10 @@ public class ModuleReporting extends JFrame {
     private JButton valider ; 
     private ChartPanel camPan ; 
     
+    /** Constructeur de la classe du module reporting*/
     public ModuleReporting(Connexion connexion1){
         
+        // Création de la fenêtre
         super();
         connexion = connexion1 ;
         this.setTitle("Reporting");
@@ -50,17 +45,19 @@ public class ModuleReporting extends JFrame {
         this.setResizable(false);
         this.setLayout(new BorderLayout());
         
+        //Designe de la partie haute de la fenêtre
         panChoix = new JPanel() ; 
         panChoix.setBorder(BorderFactory.createTitledBorder("Choix du diagramme"));
         panChoix.setLayout(null);
         panChoix.setPreferredSize(new Dimension(750,150));
         
-        
+        // Design de la partie resultat de la fenêtre
         panResultat = new JPanel() ; 
         panResultat.setBorder(BorderFactory.createTitledBorder("Resultat"));
         panResultat.setLayout(null);
         panResultat.setPreferredSize(new Dimension(750,420));
         
+        // Création de la barre de choix
         String[] tab = {"--Selectionner--","Nombre de malade par service","Nombre d'infirmiers par service","Nombre de malade par mutuelle"} ; 
         comboChoix = new JComboBox(tab);
         comboChoix.setBounds(100,40,300,25);
@@ -68,29 +65,35 @@ public class ModuleReporting extends JFrame {
         labelChoix = new JLabel("Choix : ") ; 
         labelChoix.setBounds(20,40,50,25);
         
+        // Création du bouton valider
         valider = new JButton("Valider");
         valider.setBounds(480,110,100,25);
         
-        
         panChoix.add(comboChoix) ; 
         panChoix.add(labelChoix) ;
-        panChoix.add(valider) ;
+        /////// Pas necessaire ///////
+        //panChoix.add(valider) ;
         
         DefaultPieDataset cam = new DefaultPieDataset();
          
+        // Création du camembert
         JFreeChart camDiag = ChartFactory.createPieChart("", cam);
          
+        // Design du camembert
         camPan = new ChartPanel(camDiag);
         camPan.setBounds(40,40,500,350);
         panResultat.add(camPan);
         
+        //on affiche tous les éléments swing créer
         this.getContentPane().add(panChoix,BorderLayout.NORTH);
         this.getContentPane().add(panResultat,BorderLayout.SOUTH);
         
-        
+        // On rend visible la fenêtre
         this.setVisible(true);
     }
-    public void Camembert(String titre, String[] tab, String[] tabQ){
+    
+    public void Camembert(String titre, String[] tab, String[] tabQ)
+    {
         
         DefaultPieDataset cam1 = new DefaultPieDataset();
         for(int i = 0 ; i< tab.length ; i++)
@@ -103,6 +106,7 @@ public class ModuleReporting extends JFrame {
         
     }
      
+    /** Classe permettant la création du camembert*/
     class ActionComboBox implements ActionListener {
         
         @Override
@@ -138,9 +142,7 @@ public class ModuleReporting extends JFrame {
                 }
             }catch (SQLException ex) {
                     Logger.getLogger(ModuleReporting.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            
-            
+                }    
         }
     }
     
