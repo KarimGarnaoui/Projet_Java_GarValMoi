@@ -37,7 +37,7 @@ public class ModuleReporting extends JFrame {
     private JComboBox comboChoix ; 
     private JPanel panChoix , panResultat ; 
     private JLabel labelChoix ; 
-    private JButton valider , retour ; 
+    private JButton valider ; 
     private ChartPanel camPan ; 
     
     public ModuleReporting(Connexion connexion1){
@@ -45,10 +45,9 @@ public class ModuleReporting extends JFrame {
         super();
         connexion = connexion1 ;
         this.setTitle("Reporting");
-        this.setSize(800,600);
-        this.setLocationRelativeTo(null);
+        this.setSize(624,600);
+        this.setLocation(850,432);
         this.setResizable(false);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());
         
         panChoix = new JPanel() ; 
@@ -70,22 +69,19 @@ public class ModuleReporting extends JFrame {
         labelChoix.setBounds(20,40,50,25);
         
         valider = new JButton("Valider");
-        valider.setBounds(680,110,100,25);
-        retour = new JButton("Retour");
-        retour.setBounds(570,110,100,25);
-        retour.addActionListener(new ActionRetour());
+        valider.setBounds(480,110,100,25);
+        
         
         panChoix.add(comboChoix) ; 
         panChoix.add(labelChoix) ;
         panChoix.add(valider) ;
-        panChoix.add(retour) ;
         
         DefaultPieDataset cam = new DefaultPieDataset();
          
-        JFreeChart camDiag = ChartFactory.createPieChart("", cam,false,false,false);
+        JFreeChart camDiag = ChartFactory.createPieChart("", cam);
          
         camPan = new ChartPanel(camDiag);
-        camPan.setBounds(40,40,700,350);
+        camPan.setBounds(40,40,500,350);
         panResultat.add(camPan);
         
         this.getContentPane().add(panChoix,BorderLayout.NORTH);
@@ -107,16 +103,6 @@ public class ModuleReporting extends JFrame {
         
     }
      
-    
-    class ActionRetour implements ActionListener {
-        
-        @Override
-        public void actionPerformed(ActionEvent e)
-        {
-            dispose();
-        }
-    }
-    
     class ActionComboBox implements ActionListener {
         
         @Override

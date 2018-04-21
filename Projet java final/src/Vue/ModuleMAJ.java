@@ -1,6 +1,7 @@
 package Vue;
 
 import Modele.Connexion;
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.StringStack;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -33,7 +34,7 @@ public class ModuleMAJ extends JFrame
     private final JTextField valeur, clef, clefModif ;
     
     private  JTable tableResultats ; 
-    private final JButton Supprimer,Ajouter,Modifier,retour ; 
+    private final JButton Supprimer,Ajouter,Modifier ; 
     private final Connexion connexion ;
     private JPanel modifPan, suppPan, ajoutPan ; 
     private String ChoixMAJ; 
@@ -49,9 +50,8 @@ public class ModuleMAJ extends JFrame
         ChoixMAJ = "=";
         this.setTitle("Mise à jour des données");
         this.setSize(500,400);
-        this.setLocationRelativeTo(null);
+        this.setLocation(452, 30);
         this.setResizable(false);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());
         
         /////////////Modification /////////////////
@@ -61,7 +61,7 @@ public class ModuleMAJ extends JFrame
         modifPan.setPreferredSize(new Dimension(490,190));
         
         
-        tabTables = new String[]{"--Selectionner--" , "chambre" , "docteur" , "employe" , "hospitalisation" , "infirmier" , "malade" , "service" , "soigne" } ;
+        tabTables = new String[]{"--Selectionner--" , "employe" , "docteur" , "infirmier" , "malade" } ;
         table = new JComboBox(tabTables);
         table.setBounds(120,30,150,25);
         table.addActionListener(new ModifListe());
@@ -81,7 +81,7 @@ public class ModuleMAJ extends JFrame
         
         clefModif = new JTextField() ; 
         clefModif.setBounds(120,100,150,25);
-        clefModifLabel = new JLabel("Clef : ") ;
+        clefModifLabel = new JLabel("Numero : ") ;
         clefModifLabel.setBounds(20,100,100,25);
         modifPan.add(clefModifLabel) ; 
         modifPan.add(clefModif) ;
@@ -94,7 +94,7 @@ public class ModuleMAJ extends JFrame
         modifPan.add(valeur) ;
         
         Modifier = new JButton("Modifier");
-        Modifier.setBounds(370,100,100,25);
+        Modifier.setBounds(375,135,100,25);
         Modifier.addActionListener(new ActionModifier());
         modifPan.add(Modifier);
         
@@ -105,17 +105,17 @@ public class ModuleMAJ extends JFrame
         suppPan.setLayout(null);
         suppPan.setPreferredSize(new Dimension(340,190));
         
-        table2 = new JComboBox(tabTables);
-        table2.setBounds(70,30,200,25);
+        table2 = new JComboBox(new String[]{"--Selectionner--","docteur","employe","infirmier","malade"});
+        table2.setBounds(100,30,150,25);
         table2Label = new JLabel("Table : ") ;
-        table2Label.setBounds(20,30,50,25);
+        table2Label.setBounds(20,30,100,25);
         suppPan.add(table2Label) ; 
         suppPan.add(table2) ; 
         
         clef = new JTextField();
-        clef.setBounds(70,65,200,25);
-        clefSuppLabel = new JLabel("Clef : ");
-        clefSuppLabel.setBounds(20,65,50,25);
+        clef.setBounds(100,65,150,25);
+        clefSuppLabel = new JLabel("Numero : ");
+        clefSuppLabel.setBounds(20,65,100,25);
         suppPan.add(clefSuppLabel);
         suppPan.add(clef);
         
@@ -132,15 +132,9 @@ public class ModuleMAJ extends JFrame
         ajoutPan.setPreferredSize(new Dimension(140,190));
         
         Ajouter = new JButton("Ajouter");
-        Ajouter.setBounds(20,50,100,25);
+        Ajouter.setBounds(20,140,100,25);
         Ajouter.addActionListener(new ActionAjouter());
         ajoutPan.add(Ajouter);
-        
-        retour = new JButton("Retour");
-        retour.setBounds(20,140,100,25);
-        retour.addActionListener(new ActionRetour());
-        ajoutPan.add(retour) ; 
-        
         
         
         this.getContentPane().add(modifPan,BorderLayout.NORTH) ;    
@@ -153,37 +147,17 @@ public class ModuleMAJ extends JFrame
     public void setJComboBox(String nomTable)
     {
         
-        if(nomTable.equals("chambre")){
-            tabChamps = new String[]{"code_service","no_chambre","surveillant","nb_lits"} ;
-            clefModifLabel.setText("code_service");
-        }
         if(nomTable.equals("docteur")){
-            tabChamps = new String[]{"numero","specialite"} ;
-            clefModifLabel.setText("numero");
+            tabChamps = new String[]{"specialite"} ;
         }
         if(nomTable.equals("employe")){
-            tabChamps = new String[]{"numero","nom","prenom","adresse","tel"} ;
-            clefModifLabel.setText("numero");
-        }
-        if(nomTable.equals("hospitalisation")){
-            tabChamps = new String[]{"no_malade","code_service","no_chambre","lit"} ;
-            clefModifLabel.setText("no_malade");
+            tabChamps = new String[]{"nom","prenom","adresse","tel"} ;
         }
         if(nomTable.equals("infirmier")){
-            tabChamps = new String[]{"numero","code_service","rotation","salaire"} ;
-            clefModifLabel.setText("numero");
+            tabChamps = new String[]{"code_service","rotation","salaire"} ;
         }
         if(nomTable.equals("malade")){
-            tabChamps = new String[]{"numero","nom","prenom","adresse","tel","mutuelle"};
-            clefModifLabel.setText("numero");
-        }
-        if(nomTable.equals("service")){
-            tabChamps = new String[]{"code","nom","batiment","directeur"} ;
-            clefModifLabel.setText("code");
-        }
-        if(nomTable.equals("soigne")){
-            tabChamps = new String[]{"no_docteur","no_malade"} ;
-            clefModifLabel.setText("no_docteur");
+            tabChamps = new String[]{"nom","prenom","adresse","tel","mutuelle"};
         }
         DefaultComboBoxModel model = new DefaultComboBoxModel(tabChamps);
        
@@ -209,16 +183,6 @@ public class ModuleMAJ extends JFrame
         }
     }
     
-    class ActionRetour implements ActionListener 
-    {
-    
-        @Override
-        public void actionPerformed(ActionEvent e)
-        {
-            dispose();
-        }
-    }
-     
     class ActionSupprimer implements ActionListener 
     {
              
@@ -230,8 +194,32 @@ public class ModuleMAJ extends JFrame
           
                 try 
                 { 
-                    System.out.println("DELETE FROM "+table1+" WHERE numero ="+"'"+clef1+"'");
-                    connexion.executeUpdate("DELETE FROM "+table1+" WHERE numero ="+"'"+clef1+"'");
+                    if(!clef1.equals("") && !table1.equals("--Selectionner--"))
+                    {
+                        if(table1.equals("docteur")){
+                        System.out.println("DELETE FROM docteur WHERE numero ="+"'"+clef1+"'");
+                        connexion.executeUpdate("DELETE FROM docteur WHERE numero ="+"'"+clef1+"'");
+                        System.out.println("DELETE FROM employe WHERE numero ="+"'"+clef1+"'");
+                        connexion.executeUpdate("DELETE FROM employe WHERE numero ="+"'"+clef1+"'");
+                        System.out.println("DELETE FROM soigne WHERE no_docteur ="+"'"+clef1+"'");
+                        connexion.executeUpdate("DELETE FROM soigne WHERE no_docteur ="+"'"+clef1+"'");
+                        }
+                        if(table1.equals("infirmier")){
+                            System.out.println("DELETE FROM infirmier WHERE numero ="+"'"+clef1+"'");
+                            connexion.executeUpdate("DELETE FROM infirmier WHERE numero ="+"'"+clef1+"'");
+                            System.out.println("DELETE FROM employe WHERE numero ="+"'"+clef1+"'");
+                            connexion.executeUpdate("DELETE FROM employe WHERE numero ="+"'"+clef1+"'");
+                            System.out.println("DELETE FROM chambre WHERE numero ="+"'"+clef1+"'");
+                            connexion.executeUpdate("DELETE FROM chambre WHERE numero ="+"'"+clef1+"'");
+                        }
+                        if(table1.equals("malade")){
+                            System.out.println("DELETE FROM malade WHERE numero ="+"'"+clef1+"'");
+                            connexion.executeUpdate("DELETE FROM malade WHERE numero ="+"'"+clef1+"'");
+                            System.out.println("DELETE FROM soigne WHERE no_malade ="+"'"+clef1+"'");
+                            connexion.executeUpdate("DELETE FROM soigne WHERE no_malade ="+"'"+clef1+"'");
+                        }
+                    }
+                     
                 } 
                 catch (SQLException ex) 
                 {
@@ -250,13 +238,16 @@ public class ModuleMAJ extends JFrame
             String table1 = table.getSelectedItem().toString();
             String champ1 = champs.getSelectedItem().toString();
             String clefSelect = clefModif.getText();
-            String clef1 = clefModifLabel.getText();
+            String clef1 = "numero" ; 
             String new_val = valeur.getText();
           
                 try 
                 { 
-                    System.out.println("Requête SQL : UPDATE  "+table1+" SET "+champ1+" = '"+new_val+"' WHERE "+clef1+" = '"+clefSelect+"'");
-                    connexion.executeUpdate("UPDATE  "+table1+" SET "+champ1+" = '"+new_val+"' WHERE "+clef1+" = '"+clefSelect+"'");
+                    if(!table1.equals("--Selectionner--") && !clef1.equals("") && !new_val.equals("")){
+                        System.out.println("Requête SQL : UPDATE  "+table1+" SET "+champ1+" = '"+new_val+"' WHERE "+clef1+" = '"+clefSelect+"'");
+                        connexion.executeUpdate("UPDATE  "+table1+" SET "+champ1+" = '"+new_val+"' WHERE "+clef1+" = '"+clefSelect+"'");
+                    }
+                    
                 } 
                 catch (SQLException ex) 
                 {

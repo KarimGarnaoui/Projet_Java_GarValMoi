@@ -6,6 +6,7 @@
 package Vue;
 
 import Modele.Connexion;
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.StringStack;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -31,10 +32,10 @@ public class AjoutElem extends JFrame {
     private Connexion connexion ; 
     private JPanel ajoutPanel ; 
     private String[] tabChampsAjout, tabTablesAjout;
-    private JComboBox tableAjout ; 
+    private JComboBox tableAjout, fonctionEmploye,  champ7,  champ8 ; 
     private JLabel tableAjoutLabel ; 
-    private JTextField champ1, champ2, champ3, champ4, champ5, champ6 ; 
-    private JLabel champ1Label, champ2Label, champ3Label, champ4Label, champ5Label, champ6Label ; 
+    private JTextField champ1, champ2, champ3, champ4, champ5, champ6, champ9 ; 
+    private JLabel champ1Label, champ2Label, champ3Label, champ4Label, champ5Label, champ6Label, champ7Label, champ8Label, champ9Label ; 
     private JButton ajouterButton ; 
     
     
@@ -62,21 +63,21 @@ public class AjoutElem extends JFrame {
             connexion = connexion1 ; 
             
             this.setTitle("Ajouter");
-            this.setSize(420,370);
-            this.setLocationRelativeTo(null);
+            this.setSize(520,400);
+            this.setLocation(954,30);
             this.setResizable(false);
             this.setLayout(new BorderLayout()); 
             
             ajoutPanel = new JPanel() ; 
             ajoutPanel.setBorder(BorderFactory.createTitledBorder("Ajouter"));
             ajoutPanel.setLayout(null);
-            ajoutPanel.setPreferredSize(new Dimension(400,350));
+            ajoutPanel.setPreferredSize(new Dimension(500,370));
             
             tabChampsAjout = new String[]{} ; 
             tabTablesAjout = new String[]{"--Selectionner--" , "employe" , "malade" } ;
             tableAjout = new JComboBox(tabTablesAjout) ;
             tableAjoutLabel = new JLabel() ;
-            tableAjout.setBounds(120,30,200,25);
+            tableAjout.setBounds(120,30,120,25);
             tableAjout.addActionListener(new ModifListeAjout());
             tableAjoutLabel = new JLabel("Table : ") ;
             tableAjoutLabel.setBounds(30,30,100,25);
@@ -90,6 +91,10 @@ public class AjoutElem extends JFrame {
             champ5 = new JTextField() ;
             champ6 = new JTextField() ;
             
+            champ7 = new JComboBox(new String[]{"REA","CHG","CAR"}) ;
+            champ8 = new JComboBox(new String[]{"JOUR","NUIT"}) ;
+            champ9 = new JTextField() ;
+            
             champ1Label = new JLabel("Champ1") ;
             champ2Label = new JLabel("Champ2") ;
             champ3Label = new JLabel("Champ3") ;
@@ -97,12 +102,23 @@ public class AjoutElem extends JFrame {
             champ5Label = new JLabel("Champ5") ;
             champ6Label = new JLabel("Champ6") ;
             
-            champ1.setBounds(120,65,200,25);
-            champ2.setBounds(120,100,200,25);
-            champ3.setBounds(120,135,200,25);
-            champ4.setBounds(120,170,200,25);
-            champ5.setBounds(120,205,200,25);
-            champ6.setBounds(120,240,200,25);
+            champ7Label = new JLabel("code_service") ;
+            champ8Label = new JLabel("rotation") ;
+            champ9Label = new JLabel("salaire") ;
+            
+            fonctionEmploye = new JComboBox(new String[]{"Pneumologue","Cardiologue","Orthopediste","Traumatologue","Anesthesiste","Radiologue","Infirmier"}) ; 
+            fonctionEmploye.setBounds(120,240,120,25);
+            fonctionEmploye.addActionListener(new ModifListeFonction());
+            
+            champ1.setBounds(120,65,120,25);
+            champ2.setBounds(120,100,120,25);
+            champ3.setBounds(120,135,120,25);
+            champ4.setBounds(120,170,120,25);
+            champ5.setBounds(120,205,120,25);
+            champ6.setBounds(120,240,120,25);
+            champ7.setBounds(370,65,120,25);
+            champ8.setBounds(370,100,120,25);
+            champ9.setBounds(370,135,120,25);
             
             champ1Label.setBounds(30,65,100,25);
             champ2Label.setBounds(30,100,100,25);
@@ -110,6 +126,16 @@ public class AjoutElem extends JFrame {
             champ4Label.setBounds(30,170,100,25);
             champ5Label.setBounds(30,205,100,25);
             champ6Label.setBounds(30,240,100,25);
+            champ7Label.setBounds(260,65,120,25);
+            champ8Label.setBounds(260,100,120,25);
+            champ9Label.setBounds(260,135,120,25);
+            
+            champ7.setVisible(false);
+            champ8.setVisible(false);
+            champ9.setVisible(false);
+            champ7Label.setVisible(false);
+            champ8Label.setVisible(false);
+            champ9Label.setVisible(false);
             
             
             ajoutPanel.add(champ1Label) ; 
@@ -118,6 +144,9 @@ public class AjoutElem extends JFrame {
             ajoutPanel.add(champ4Label) ; 
             ajoutPanel.add(champ5Label) ; 
             ajoutPanel.add(champ6Label) ; 
+            ajoutPanel.add(champ7Label) ; 
+            ajoutPanel.add(champ8Label) ; 
+            ajoutPanel.add(champ9Label) ; 
             
             ajoutPanel.add(champ1) ;
             ajoutPanel.add(champ2) ;
@@ -125,6 +154,11 @@ public class AjoutElem extends JFrame {
             ajoutPanel.add(champ4) ;
             ajoutPanel.add(champ5) ;
             ajoutPanel.add(champ6) ;
+            ajoutPanel.add(champ7) ;
+            ajoutPanel.add(champ8) ;
+            ajoutPanel.add(champ9) ;
+            
+            ajoutPanel.add(fonctionEmploye) ; 
             
             ajouterButton = new JButton("Ajouter") ; 
             ajouterButton.setBounds(280,290,100,25);
@@ -147,8 +181,9 @@ public class AjoutElem extends JFrame {
                         champ3Label.setText("prenom");
                         champ4Label.setText("adresse");
                         champ5Label.setText("tel");
-                        champ6Label.setVisible(false);
                         champ6.setVisible(false);
+                        fonctionEmploye.setVisible(true);
+                        champ6Label.setText("fonction");
                     }
                     if(tableAjout.getSelectedItem().toString().equals("malade")){
                         champ1Label.setText("numero");
@@ -156,13 +191,39 @@ public class AjoutElem extends JFrame {
                         champ3Label.setText("prenom");
                         champ4Label.setText("adresse");
                         champ5Label.setText("tel");
-                        champ6Label.setVisible(true);
                         champ6.setVisible(true);
+                        fonctionEmploye.setVisible(false);
                         champ6Label.setText("mutuelle");
                     }
                     
                 }
             }
+            
+            class ModifListeFonction implements ActionListener 
+            {
+
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    if(fonctionEmploye.getSelectedItem().toString().equals("Infirmier")){
+                       champ7.setVisible(true);
+                       champ8.setVisible(true);
+                       champ9.setVisible(true);
+                       champ7Label.setVisible(true);
+                       champ8Label.setVisible(true);
+                       champ9Label.setVisible(true);
+                    }
+                    else{
+                        champ7.setVisible(false);
+                       champ8.setVisible(false);
+                       champ9.setVisible(false);
+                       champ7Label.setVisible(false);
+                       champ8Label.setVisible(false);
+                       champ9Label.setVisible(false);
+                    }
+                }
+            }
+            
             
             class BoutonAjouter implements ActionListener 
             {
@@ -178,16 +239,35 @@ public class AjoutElem extends JFrame {
                    String champ5_ = champ5.getText() ; 
                    String champ6_ = champ6.getText() ; 
                    try {
+                   if(!champ1_.equals("") && !champ2_.equals("") && !champ3_.equals("") && !champ4_.equals("") && !champ5_.equals("") && !table1.equals("--Selectionner--"))
+                   {
                    if(table1.equals("employe")){
-                           System.out.println("INSERT INTO "+table1+" VALUES "+"('"+champ1_+"','"+champ2_+"','"+champ3_+"','"+champ4_+"','"+champ5_+"')");
-                           connexion.executeUpdate("INSERT INTO "+table1+" VALUES "+"('"+champ1_+"','"+champ2_+"','"+champ3_+"','"+champ4_+"','"+champ5_+"')");
+                       if(fonctionEmploye.getSelectedItem().toString().equals("Infirmier") && !champ9.getText().equals(""))
+                       {
+                           System.out.println("INSERT INTO employe VALUES "+"('"+champ1_+"','"+champ2_+"','"+champ3_+"','"+champ4_+"','"+champ5_+"')");
+                           connexion.executeUpdate("INSERT INTO employe VALUES "+"('"+champ1_+"','"+champ2_+"','"+champ3_+"','"+champ4_+"','"+champ5_+"')");
+                           System.out.println("INSERT INTO infirmier VALUES "+"('"+champ1_+"','"+champ7.getSelectedItem().toString()+"','"+champ8.getSelectedItem().toString()+"','"+champ9.getText()+"')");
+                           connexion.executeUpdate("INSERT INTO infirmier VALUES "+"('"+champ1_+"','"+champ7.getSelectedItem().toString()+"','"+champ8.getSelectedItem().toString()+"','"+champ9.getText()+"')");
                        }
+                       if(fonctionEmploye.getSelectedItem().toString().equals("Pneumologue") ||
+                          fonctionEmploye.getSelectedItem().toString().equals("Cardiologue") ||
+                          fonctionEmploye.getSelectedItem().toString().equals("Orthopediste") ||
+                          fonctionEmploye.getSelectedItem().toString().equals("Traumatologue") ||
+                          fonctionEmploye.getSelectedItem().toString().equals("Anesthesiste") ||
+                          fonctionEmploye.getSelectedItem().toString().equals("Radiologue")) 
+                       {
+                           System.out.println("INSERT INTO employe VALUES "+"('"+champ1_+"','"+champ2_+"','"+champ3_+"','"+champ4_+"','"+champ5_+"')");
+                           connexion.executeUpdate("INSERT INTO employe VALUES "+"('"+champ1_+"','"+champ2_+"','"+champ3_+"','"+champ4_+"','"+champ5_+"')");
+                           System.out.println("INSERT INTO docteur VALUES "+"('"+champ1_+"','"+fonctionEmploye.getSelectedItem().toString()+"')");
+                           connexion.executeUpdate("INSERT INTO docteur VALUES "+"('"+champ1_+"','"+fonctionEmploye.getSelectedItem().toString()+"')");
+                       }
+                   }
                    if(table1.equals("malade")){
                            System.out.println("INSERT INTO "+table1+" VALUES "+"("+champ1_+","+champ2_+","+champ3_+","+champ4_+","+champ5_+","+champ6_+")");
                            connexion.executeUpdate("INSERT INTO "+table1+" VALUES "+"('"+champ1_+"','"+champ2_+"','"+champ3_+"','"+champ4_+"','"+champ5_+"','"+champ6_+"')");
                        }
-                   
-                   } catch (SQLException ex) {
+                   }
+                      } catch (SQLException ex) {
                            Logger.getLogger(AjoutElem.class.getName()).log(Level.SEVERE, null, ex);  
                    }
                 }

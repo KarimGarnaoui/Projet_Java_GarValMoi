@@ -29,8 +29,8 @@ public class FenetreModules extends JFrame {
         super();
         connexion = connexion1 ; 
         this.setTitle("Menu");
-        this.setSize(400,300);
-        this.setLocationRelativeTo(null);
+        this.setSize(400,400);
+        this.setLocation(50,30);
         this.setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLayout(null);
@@ -40,10 +40,10 @@ public class FenetreModules extends JFrame {
         BoutonReporting = new JButton("Reporting");
         Quitter = new JButton("Quitter");
         
-        BoutonMAJ.setBounds(100,40,180,40);
-        BoutonRecherche.setBounds(100,90,180,40);
-        BoutonReporting.setBounds(100,140,180,40);
-        Quitter.setBounds(300,225,75,25);
+        BoutonMAJ.setBounds(100,40,180,50);
+        BoutonRecherche.setBounds(100,110,180,50);
+        BoutonReporting.setBounds(100,180,180,50);
+        Quitter.setBounds(300,320,75,25);
         
         BoutonRecherche.addActionListener(new BoutonRechercher());
         BoutonMAJ.addActionListener(new BoutonMAJ());

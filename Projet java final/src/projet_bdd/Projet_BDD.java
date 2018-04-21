@@ -5,6 +5,7 @@
  */
 package projet_bdd;
 import Vue.ModuleRechercher;
+import javafx.stage.Screen;
 import vue.mafenetre;
 
 /**

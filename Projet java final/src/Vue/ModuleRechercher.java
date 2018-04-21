@@ -35,7 +35,7 @@ public class ModuleRechercher extends JFrame {
     private final JTextField valeur ; 
     private final JRadioButton conditionEgalite, conditionSuperieur, conditionInferieur, conditionDifferent ;
     private  JTable tableResultats ; 
-    private final JButton valider, retour ; 
+    private final JButton valider; 
     private final Connexion connexion ;
     private JPanel Result, Content, Condition ;
     private String conditionSelectionnee ; 
@@ -55,9 +55,8 @@ public class ModuleRechercher extends JFrame {
         conditionSelectionnee = "=" ; 
         this.setTitle("Rechercher");
         this.setSize(800,600);
-        this.setLocationRelativeTo(null);
+        this.setLocation(50,432);
         this.setResizable(false);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());
         
         Content = new JPanel() ;
@@ -96,11 +95,6 @@ public class ModuleRechercher extends JFrame {
         valider.setBounds(500,135,75,25);
         valider.addActionListener(new ActionValider());
         Content.add(valider) ; 
-        
-        retour = new JButton("Retour");
-        retour.setBounds(400,135,75,25);
-        retour.addActionListener(new ActionRetour());
-        Content.add(retour) ; 
         
         // Nom de la BDD
         JLabel nomBDD = new JLabel("Base de donnée");        
@@ -209,15 +203,6 @@ public class ModuleRechercher extends JFrame {
         public void actionPerformed(ActionEvent e)
         {
             setJComboBox(table.getSelectedItem().toString());
-
-        }
-    }
-    class ActionRetour implements ActionListener {
-    
-        @Override
-        public void actionPerformed(ActionEvent e)
-        {
-            dispose();
 
         }
     }
