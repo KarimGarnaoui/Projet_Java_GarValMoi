@@ -48,7 +48,7 @@ public class FenetreModules extends JFrame {
         BoutonRecherche.addActionListener(new BoutonRechercher());
         BoutonMAJ.addActionListener(new BoutonMAJ());
         Quitter.addActionListener(new BoutonQuitter());
-        
+        BoutonReporting.addActionListener(new BoutonReporting());
         this.add(BoutonMAJ) ; 
         this.add(BoutonRecherche) ; 
         this.add(BoutonReporting) ;
@@ -98,6 +98,17 @@ public class FenetreModules extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e){
                 System.exit(0);
+            }
+      
+    }
+    
+    class BoutonReporting implements ActionListener{
+           
+            @Override
+            public void actionPerformed(ActionEvent e){
+                
+                ModuleReporting reporting = new ModuleReporting(connexion) ;
+                
             }
       
     }
