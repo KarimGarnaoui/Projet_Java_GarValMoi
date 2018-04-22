@@ -38,12 +38,11 @@ public class ModuleRechercher extends JFrame {
     
     /**
      * Constructeur de la classe ModuleRechercher
-     * @param connexion1
+     * @param connexion1 Variable permettant la liaison à la BDD
      * @throws java.sql.SQLException
      */
     public ModuleRechercher(Connexion connexion1) throws SQLException{
         
-        // Création de la fenêtre
         super();
         connexion = connexion1 ;
         conditionSelectionnee = "=" ; 
@@ -53,13 +52,11 @@ public class ModuleRechercher extends JFrame {
         this.setResizable(false);
         this.setLayout(new BorderLayout());
         
-        // Création d'une partie de la fenêtre
         Content = new JPanel() ;
         Content.setBorder(BorderFactory.createTitledBorder("Critères de recherche"));
         Content.setLayout(null);
         Content.setPreferredSize(new Dimension(590,200));
         
-        // Liste déroulante Table
         String tab1[] = {"--Selectionner--" , "chambre" , "docteur" , "employe" , "hospitalisation" , "infirmier" , "malade" , "service" , "soigne" } ;
         table = new JComboBox(tab1);
         table.setBounds(350,20,200,25);
@@ -69,7 +66,6 @@ public class ModuleRechercher extends JFrame {
         Content.add(tableLabel) ; 
         Content.add(table) ;
         
-        // Liste déroulante champ dépendant de listeTable
         String tab2[] = { "" } ;
         champs = new JComboBox(tab2);
         champs.setBounds(350,55,200,25);
@@ -78,7 +74,6 @@ public class ModuleRechercher extends JFrame {
         Content.add(champsLabel) ; 
         Content.add(champs) ;
         
-        // Valeur recherchée
         valeur = new JTextField() ; 
         valeur.setBounds(350,90,200,25);
         valeurLabel = new JLabel("Valeur : ") ;
@@ -199,18 +194,25 @@ public class ModuleRechercher extends JFrame {
         champs.setModel(model);
     }
     
+    /**
+     * Permet de modifier et de raffraichir le tableau de résultats
+     */
     public void modifResultats(){
         
         DefaultTableModel tm = new DefaultTableModel(donnees, tab);
         tableResultats.setModel(tm) ;  
     }
-    
+    /**
+     * Permet de modifier et de raffraichir le tableau de résultats en cas de requette manuelle
+     */
     public void modifResultatsManuel(){
         tab = new String[donnees[0].length] ; 
         DefaultTableModel tm = new DefaultTableModel(donnees, tab);
         tableResultats.setModel(tm) ;  
     }
-     
+    /**
+     * Appel de la fonction setJComboBox lors d'un evennement
+     */ 
     class ActionRechercher implements ActionListener {
     
         @Override
@@ -220,6 +222,9 @@ public class ModuleRechercher extends JFrame {
 
         }
     }
+    /**
+     * Lancement de requete SQL manuelle et appel de la fonction modifResultatsManuel lors d'un evennement
+     */
     class ActionAppliquer implements ActionListener 
     {    
         @Override
@@ -241,7 +246,7 @@ public class ModuleRechercher extends JFrame {
     }
     
     
-    /** Permet de récuperer la condition selectionnée*/
+    /** Permet de récuperer la condition selectionnée lors d'un evennement*/
     class ActionCondition implements ActionListener {
     
         @Override

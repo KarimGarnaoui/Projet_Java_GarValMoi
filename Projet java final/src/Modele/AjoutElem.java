@@ -31,27 +31,7 @@ public class AjoutElem extends JFrame {
     private JTextField champ1, champ2, champ3, champ4, champ5, champ6, champ9 ; 
     private JLabel champ1Label, champ2Label, champ3Label, champ4Label, champ5Label, champ6Label, champ7Label, champ8Label, champ9Label ; 
     private JButton ajouterButton ; 
-    
-    
-//    String table1 = table.getSelectedItem().toString();
-//            String champ1 = champs.getSelectedItem().toString();
-//            String clefSelect = clefModif.getText();
-//            String clef1 = clefModifLabel.getText();
-//            String new_val = valeur.getText();
-            
-//            connexion.executeUpdate("INSERT INTO docteur VALUES ('6547','Pneumologue')");
-            
-          
-//                try 
-//                { 
-//                    System.out.println("Requête SQL : UPDATE  "+table1+" SET "+champ1+" = '"+new_val+"' WHERE "+clef1+" = '"+clefSelect+"'");
-//                    connexion.executeUpdate("UPDATE  "+table1+" SET "+champ1+" = '"+new_val+"' WHERE "+clef1+" = '"+clefSelect+"'");
-//                } 
-//                catch (SQLException ex) 
-//                {
-//                    Logger.getLogger(ModuleRechercher.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-            
+  
     public AjoutElem(Connexion connexion1){
         
             connexion = connexion1 ; 
@@ -195,7 +175,9 @@ public class AjoutElem extends JFrame {
                 }
             }
             
-           
+            /**
+             * Modification des différents champs en fonction des informations saisies 
+             */
             class ModifListeFonction implements ActionListener 
             {
 

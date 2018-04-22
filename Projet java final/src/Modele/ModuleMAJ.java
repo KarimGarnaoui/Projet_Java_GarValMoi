@@ -1,6 +1,6 @@
 package Modele;
 
-/** Librairie importé*/
+/** Librairies importé*/
 import projet_bdd.Connexion;
 import com.sun.org.apache.xalan.internal.xsltc.compiler.util.StringStack;
 import java.awt.BorderLayout;
@@ -46,7 +46,11 @@ public class ModuleMAJ extends JFrame
     private JScrollPane tableResultatsDeroulant ; 
     private String[] tabChamps, tabTables ;
     
-    /** Constructeur de la classe du module mise à jour*/
+    /** 
+     * Constructeur de la classe du module mise à jour
+     * @param connexion1 variable permmetant la liaison à la BDD
+     * @throws SQLException 
+     */
     public ModuleMAJ(Connexion connexion1) throws SQLException
     {
         // déclaration de la fenêtre
@@ -174,14 +178,9 @@ public class ModuleMAJ extends JFrame
         champs.setModel(model);
     }
     
-    
-    public void modifResultats()
-    {
-        
-        DefaultTableModel tm = new DefaultTableModel(donnees, tabChamps);
-        tableResultats.setModel(tm) ;  
-    }
-     
+    /**
+     * Permet d'appeler la méthode setJCombobox lors d'un évennement
+     */
     class ModifListe implements ActionListener 
     {
     

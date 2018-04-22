@@ -54,9 +54,7 @@ public class Connexion {
         String urlDatabase = "jdbc:mysql://localhost/" + nameDatabase;
 
         //création d'une connexion JDBC à la base 
-        System.out.println("OPLA");
         conn = DriverManager.getConnection(urlDatabase, loginDatabase, passwordDatabase);
-        System.out.println("OPLA");
         // création d'un ordre SQL (statement)
         stmt = conn.createStatement();
     }
