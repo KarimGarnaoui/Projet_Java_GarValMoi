@@ -1,8 +1,8 @@
-package Vue;
+package Modele;
 
 
 /**Librairie importe*/
-import Modele.Connexion;
+import projet_bdd.Connexion;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;

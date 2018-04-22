@@ -2,7 +2,7 @@
 package vue;
 
 /** Librairie importer*/
-import Modele.Connexion;
+import projet_bdd.Connexion;
 import java.awt.event.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -84,6 +84,7 @@ public class mafenetre extends JFrame
          public void actionPerformed(ActionEvent e) 
          {
              try {
+                 
                  mafenetre(login1 ,mdp1);
              } catch (SQLException ex) {
                  Logger.getLogger(mafenetre.class.getName()).log(Level.SEVERE, null, ex);
@@ -103,7 +104,9 @@ public class mafenetre extends JFrame
               if((login.equals("root")) && (password.equals("")))
               {
                   /** On se connecte à la BDD*/
+                  
                   Connexion ma_co = new Connexion("hopital",login,password);
+                  
                   
                   dispose(); // Ferme l'ancienne Jframe pour laisser place à la nouvelle
                   

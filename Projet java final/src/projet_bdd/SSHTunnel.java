@@ -1,4 +1,4 @@
-package Modele;
+package projet_bdd;
 
 import com.jcraft.jsch.*;
 

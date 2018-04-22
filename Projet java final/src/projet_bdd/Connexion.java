@@ -1,5 +1,5 @@
 
-package Modele;
+package projet_bdd;
 
 /*
  * 
@@ -49,13 +49,14 @@ public class Connexion {
     public Connexion(String nameDatabase, String loginDatabase, String passwordDatabase) throws SQLException, ClassNotFoundException {
         // chargement driver "com.mysql.jdbc.Driver"
         Class.forName("com.mysql.jdbc.Driver");
-
+        
         // url de connexion "jdbc:mysql://localhost:3305/usernameECE"
         String urlDatabase = "jdbc:mysql://localhost/" + nameDatabase;
 
         //création d'une connexion JDBC à la base 
+        System.out.println("OPLA");
         conn = DriverManager.getConnection(urlDatabase, loginDatabase, passwordDatabase);
-
+        System.out.println("OPLA");
         // création d'un ordre SQL (statement)
         stmt = conn.createStatement();
     }
@@ -81,7 +82,7 @@ public class Connexion {
             System.out.println("Connexion reussie");
 
             // url de connexion "jdbc:mysql://localhost:3305/usernameECE"
-            String urlDatabase = "jdbc:mysql://localhost:3305/" + usernameECE;
+            String urlDatabase = "jdbc:mysql://localhost/" + usernameECE;
 
             //création d'une connexion JDBC à la base
             conn = DriverManager.getConnection(urlDatabase, loginDatabase, passwordDatabase);

@@ -1,7 +1,7 @@
-package Vue;
+package Modele;
 
 /** Librairie importé*/
-import Modele.Connexion;
+import projet_bdd.Connexion;
 import com.sun.org.apache.xalan.internal.xsltc.compiler.util.StringStack;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -19,6 +19,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -233,7 +234,7 @@ public class ModuleMAJ extends JFrame
                 } 
                 catch (SQLException ex) 
                 {
-                    Logger.getLogger(ModuleRechercher.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(null,ex);
                 }
             
         }
@@ -262,7 +263,7 @@ public class ModuleMAJ extends JFrame
                 } 
                 catch (SQLException ex) 
                 {
-                    Logger.getLogger(ModuleRechercher.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(null,ex);
                 }
                 
             

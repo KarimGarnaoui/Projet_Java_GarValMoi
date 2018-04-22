@@ -1,11 +1,14 @@
 package Vue;
 
 /** Librairie importé*/
+import Modele.ModuleRechercher;
+import Modele.ModuleReporting;
+import Modele.ModuleMAJ;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
-import Modele.Connexion;
+import projet_bdd.Connexion;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

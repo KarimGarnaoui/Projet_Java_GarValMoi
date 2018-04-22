@@ -1,4 +1,4 @@
-package Vue;
+package Modele;
 
 /** Librairie importé*/
 import java.awt.BorderLayout;
@@ -8,7 +8,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.* ;
-import Modele.Connexion;
+import projet_bdd.Connexion;
 import com.sun.corba.se.spi.orbutil.fsm.Guard;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,12 +22,12 @@ import sun.awt.image.PixelConverter;
 /** Classe permettant de gerer le module de recherche*/
 public class ModuleRechercher extends JFrame {
    
-    private final JLabel tableLabel, champsLabel, valeurLabel ; 
+    private final JLabel tableLabel, champsLabel, valeurLabel,requeteManuelleLabel ; 
     private  JComboBox table, champs ; 
-    private final JTextField valeur ; 
+    private final JTextField valeur, requeteManuelle ; 
     private final JRadioButton conditionEgalite, conditionSuperieur, conditionInferieur, conditionDifferent ;
     private  JTable tableResultats ; 
-    private final JButton valider; 
+    private final JButton valider, appliquer; 
     private final Connexion connexion ;
     private JPanel Result, Content, Condition ;
     private String conditionSelectionnee ; 
@@ -132,14 +132,26 @@ public class ModuleRechercher extends JFrame {
         Result.setBorder(BorderFactory.createTitledBorder("Résultats"));
         Result.setPreferredSize(new Dimension(780,390));
         
+        requeteManuelle = new JTextField() ; 
+        requeteManuelle.setBounds(180,360,500,25);
+        requeteManuelleLabel= new JLabel("Requête manuelle (avancé) : ");
+        requeteManuelleLabel.setBounds(10,360,170,25);
+        
+        appliquer = new JButton("Appliquer");
+        appliquer.setBounds(685,360,95,25);
+        appliquer.addActionListener(new ActionAppliquer());
+        
         String[][] donnees = {{""}} ;
         titreColonnes = new String[]{""};
         
         // Création du tableau de résultat
         tableResultats = new JTable(donnees,titreColonnes);
         tableResultatsDeroulant = new JScrollPane(tableResultats) ;
-        tableResultatsDeroulant.setBounds(20,20,750,350);
+        tableResultatsDeroulant.setBounds(20,20,750,330);
         Result.add(tableResultatsDeroulant) ; 
+        Result.add(requeteManuelleLabel) ; 
+        Result.add(requeteManuelle) ; 
+        Result.add(appliquer) ; 
         Result.setPreferredSize(new Dimension(800,400));
         
         // On rajoute tous les éléments sur la fenêtre
@@ -192,6 +204,12 @@ public class ModuleRechercher extends JFrame {
         DefaultTableModel tm = new DefaultTableModel(donnees, tab);
         tableResultats.setModel(tm) ;  
     }
+    
+    public void modifResultatsManuel(){
+        tab = new String[donnees[0].length] ; 
+        DefaultTableModel tm = new DefaultTableModel(donnees, tab);
+        tableResultats.setModel(tm) ;  
+    }
      
     class ActionRechercher implements ActionListener {
     
@@ -202,6 +220,26 @@ public class ModuleRechercher extends JFrame {
 
         }
     }
+    class ActionAppliquer implements ActionListener 
+    {    
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            String requete = requeteManuelle.getText();
+            if(requete!="")
+            {
+                try { 
+                    System.out.println("Requête SQL : "+requete);
+                    donnees = connexion.remplirChampsRequete(requete) ;
+
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(null,ex);
+                }
+                modifResultatsManuel();
+            }
+        }
+    }
+    
     
     /** Permet de récuperer la condition selectionnée*/
     class ActionCondition implements ActionListener {
@@ -233,7 +271,7 @@ public class ModuleRechercher extends JFrame {
                     donnees = connexion.remplirChampsRequete("Select * FROM "+table1+" WHERE "+champ1 +conditionSelectionnee+"'"+valeur1+"'" ) ;
 
                 } catch (SQLException ex) {
-                    Logger.getLogger(ModuleRechercher.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(null,ex);
                 }
                 modifResultats();
             }
